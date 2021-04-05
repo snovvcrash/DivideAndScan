@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "divideandscan"
+version = "0.1.1"
+description = "Divide full port scan results and use it for targeted Nmap runs"
+authors = ["Sam Freeside <snovvcrash@protonmail.ch>"]
+license = "BSD-2-Clause"
+readme = "README.md"
+homepage = "https://github.com/snovvcrash/DivideAndScan"
+repository = "https://github.com/snovvcrash/DivideAndScan"
+keywords = ["portscan", "nmap", "masscan", "rustscan"]
+classifiers = [
+	"Topic :: Security",
+	"Topic :: Port Scanning",
+	"Topic :: Penetration Testing"
+]
+packages = [
+	{ include = "das" }
+]
+exclude = [".gitignore"]
+
+[tool.poetry.scripts]
+das = 'das.divideandscan:main'
+divideandscan = 'das.divideandscan:main'
+
+[tool.poetry.dependencies]
+python = "^3.7"
+tinydb = "^4.4.0"
+netaddr = "^0.8.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.9.0"
+pylint = "^2.7.2"
+twine = "^3.4.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
