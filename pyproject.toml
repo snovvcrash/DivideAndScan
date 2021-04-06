@@ -7,7 +7,7 @@ license = "BSD-2-Clause"
 readme = "README.md"
 homepage = "https://github.com/snovvcrash/DivideAndScan"
 repository = "https://github.com/snovvcrash/DivideAndScan"
-keywords = ["portscan", "nmap", "masscan", "rustscan"]
+keywords = ["port-scanning", "enumeration", "nmap", "masscan", "rustscan"]
 classifiers = [
 	"Topic :: Security",
 	"Topic :: Port Scanning",
