@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.1-success?style=flat-square" alt="version" />
+  <img src="https://img.shields.io/badge/version-0.1.2-success?style=flat-square" alt="version" />
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-ffca1d?logo=python&logoColor=white&style=flat-square" alt="python" /></a>
   <a href="https://pypi.org/project/divideandscan"><img src="https://img.shields.io/pypi/status/divideandscan?label=pypi&color=2cffab&logo=pypi&logoColor=white&style=flat-square" alt="pypi" /></a>
   <a href="https://hub.docker.com/repository/docker/snovvcrash/divideandscan"><img src="https://img.shields.io/docker/cloud/build/snovvcrash/divideandscan?label=docker&color=099dec&logo=docker&logoColor=white&style=flat-square" alt="docker" /></a>
