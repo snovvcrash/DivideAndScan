@@ -7,11 +7,12 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.1-success.svg?style=flat-square" alt="version" />
-  <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/github/languages/top/snovvcrash/DivideAndScan.svg?logo=python&logoColor=white&style=flat-square" alt="languages" /></a>
-  <a href="https://github.com/snovvcrash/DivideAndScan/issues?q=is%3Aopen+is%3Aissue"><img src="https://img.shields.io/github/issues/snovvcrash/DivideAndScan.svg?logo=github&logoColor=white&style=flat-square" alt="issues" /></a>
-  <a href="#installation"><img src="https://img.shields.io/badge/pipx-install-2cffab.svg?logo=pypi&logoColor=white&style=flat-square" alt="pipx" /></a>
-  <a href="#using-from-docker"><img src="https://img.shields.io/badge/docker-shipped-099dec.svg?logo=docker&logoColor=white&style=flat-square" alt="docker" /></a>
+  <img src="https://img.shields.io/badge/version-0.1.1-success?style=flat-square" alt="version" />
+  <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-ffca1d?logo=python&logoColor=white&style=flat-square" alt="python" /></a>
+  <a href="https://pypi.org/project/divideandscan"><img src="https://img.shields.io/pypi/status/divideandscan?label=pypi&color=2cffab&logo=pypi&logoColor=white&style=flat-square" alt="pypi" /></a>
+  <a href="https://hub.docker.com/repository/docker/snovvcrash/divideandscan"><img src="https://img.shields.io/docker/cloud/build/snovvcrash/divideandscan?label=docker&color=099dec&logo=docker&logoColor=white&style=flat-square" alt="docker" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/issues?q=is%3Aopen+is%3Aissue"><img src="https://img.shields.io/github/issues/snovvcrash/DivideAndScan?logo=github&logoColor=white&style=flat-square" alt="issues" /></a>
+  <a href="https://twitter.com/snovvcrash"><img src="https://img.shields.io/twitter/follow/snovvcrash?label=%E2%80%8Esnovvcrash&style=social" alt="twitter">></a>
 </p>
 
 ---
@@ -79,7 +80,7 @@ sudo wget https://gist.github.com/snovvcrash/c7f8223cc27154555496a9cbb4650681/ra
 
 ## Installation
 
-DivideAndScan is available on PyPI, though I recommend installing it from GitHub with [pipx](https://github.com/pipxproject/pipx) in order to always have the bleeding-edge version:
+DivideAndScan is available on PyPI as `divideandscan`, though I recommend installing it from GitHub with [pipx](https://github.com/pipxproject/pipx) in order to always have the bleeding-edge version:
 
 ```console
 ~$ pipx install -f "git+https://github.com/snovvcrash/DivideAndScan.git"
@@ -114,7 +115,9 @@ Since the tool requires some input data and produces some output data, you shoul
 
 # How to Use
 
-![demo.png](https://user-images.githubusercontent.com/23141800/113610915-6fae9b80-9656-11eb-8b1a-db503dd43861.png)
+![how-to-use.png](https://user-images.githubusercontent.com/23141800/113610915-6fae9b80-9656-11eb-8b1a-db503dd43861.png)
+
+> More examples coming soon at [snovvcrash.rocks](https://snovvcrash.rocks/)...
 
 ## 0. Preparations
 
@@ -211,6 +214,8 @@ In order to generate a report independently of the `scan` module, you should use
 ~$ das report -db testdb -ports 22,80,443,445 -oA report2
 ~$ das report -db testdb -ports ports.txt -oA report2
 ```
+
+📑 **Note:** keep in mind that the `report` module does **not** search the DB when processing the `-hosts` and `-ports` options, but looks for Nmap raw reports directly in `.nmap` directory instead; it means that `-hosts 127.0.0.1` argument value will be successfully resolved only if `.nmap/127-0-0-1.*` file exists, and `-ports 80` argument value will be successfully resolved only if `.nmap/port80.*` file exists.
 
 </td>
 </tr>
