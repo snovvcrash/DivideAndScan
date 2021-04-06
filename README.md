@@ -9,9 +9,9 @@
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.1.2-success?style=flat-square" alt="version" />
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white&style=flat-square" alt="python" /></a>
-  <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://img.shields.io/github/workflow/status/snovvcrash/divideandscan/publish-to-pypi?label=pypi&logo=pypi&logoColor=white&style=flat-square" alt="pypi" /></a>
-  <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml"><img src="https://img.shields.io/github/workflow/status/snovvcrash/divideandscan/publish-to-docker-hub?label=docker&logo=docker&logoColor=white&style=flat-square" alt="docker" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/issues?q=is%3Aopen+is%3Aissue"><img src="https://img.shields.io/github/issues/snovvcrash/DivideAndScan?logo=github&logoColor=white&style=flat-square" alt="issues" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml/badge.svg" alt="docker" /></a>
   <a href="https://twitter.com/snovvcrash"><img src="https://img.shields.io/twitter/follow/snovvcrash?label=%E2%80%8Esnovvcrash&style=social" alt="twitter"></a>
 </p>
 

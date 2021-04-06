@@ -1,4 +1,5 @@
-name: Publish Python distributions to PyPI and TestPyPI on tagged commits using poetry
+#name: Publish Python distributions to PyPI and TestPyPI on tagged commits using poetry
+name: pypi
 
 on:
   push:

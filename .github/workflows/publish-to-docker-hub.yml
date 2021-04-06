@@ -1,4 +1,5 @@
-name: Publish Docker image to Docker Hub on tagged commits
+#name: Publish Docker image to Docker Hub on tagged commits
+name: docker
 
 on:
   push:
