@@ -22,78 +22,83 @@ BANNER = """\
 SEP = '#############################################'
 
 
-def print_info(msg):
+class Logger:
 	"""
-	Print info message.
-
-	:param msg: the message to print
-	:type msg: str
+	Event logger class (measures runtime, print messages).
 	"""
-	print(f'[\033[1;34m*\033[0m] {msg}')
 
+	def __init__(self):
+		"""
+		Constructor.
 
-def print_success(msg):
-	"""
-	Print success message.
+		:return: class object
+		:rtype: das.modules.common.Logger
+		"""
+		self.timestart = time.localtime()
 
-	:param msg: the message to print
-	:type msg: str
-	"""
-	print(f'[\033[1;32m+\033[0m] {msg}')
+	def start_timer(self):
+		"""
+		Start runtime counter.
+		"""
+		print(f'DivideAndScan {__version__} initiated at {time.strftime("%Y-%m-%d %H:%M:%S", self.timestart)}\n')
 
+	def stop_timer(self):
+		"""
+		Stop runtime counter and print the elapsed time.
+		"""
+		print(f'\nDivideAndScan done at {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())} with elapsed time {timedelta(seconds=time.time() - time.mktime(self.timestart))}')
 
-def print_error(msg):
-	"""
-	Print error message.
+	@staticmethod
+	def print_info(msg):
+		"""
+		Print info message.
 
-	:param msg: the message to print
-	:type msg: str
-	"""
-	print(f'[\033[1;31m-\033[0m] {msg}')
+		:param msg: the message to print
+		:type msg: str
+		"""
+		print(f'[\033[1;34m*\033[0m] {msg}')
 
+	@staticmethod
+	def print_success(msg):
+		"""
+		Print success message.
 
-def print_cmd(msg, parallel=None):
-	"""
-	Print command which is being executed.
+		:param msg: the message to print
+		:type msg: str
+		"""
+		print(f'[\033[1;32m+\033[0m] {msg}')
 
-	:param msg: the message to print
-	:type msg: str
-	"""
-	if parallel:
-		print(f'[CMD] ({datetime.now().strftime("%d/%m %H:%M:%S")}) <{parallel}> {msg}')
-	else:
-		print(f'\033[0;36m[\033[1;35mCMD\033[0;36m] \033[0;36m(\033[0;32m{datetime.now().strftime("%d/%m %H:%M:%S")}\033[0;36m) {msg}\033[0m')
+	@staticmethod
+	def print_error(msg):
+		"""
+		Print error message.
 
+		:param msg: the message to print
+		:type msg: str
+		"""
+		print(f'[\033[1;31m-\033[0m] {msg}')
 
-def print_separator(msg, prefix):
-	"""
-	Print a message wrapped into dividers.
+	@staticmethod
+	def print_cmd(msg, parallel=None):
+		"""
+		Print command which is being executed.
 
-	:param msg: the message to print
-	:type msg: str
-	:param prefix: the prefix string, intended to be a counter when moving to next separated item
-	:type prefix: str
-	"""
-	print(f'\033[0;31m{SEP} \033[0;32m({prefix}) \033[1;32m{msg}\033[0;31m {SEP}\033[0m')
+		:param msg: the message to print
+		:type msg: str
+		"""
+		if parallel:
+			print(f'[CMD] ({datetime.now().strftime("%d/%m %H:%M:%S")}) <{parallel}> {msg}')
+		else:
+			print(f'\033[0;36m[\033[1;35mCMD\033[0;36m] \033[0;36m(\033[0;32m{datetime.now().strftime("%d/%m %H:%M:%S")}\033[0;36m) {msg}\033[0m')
 
+	@staticmethod
+	def print_separator(msg, prefix):
+		"""
+		Print a message wrapped into dividers.
 
-def start_timer():
-	"""
-	Start runtime counter.
-
-	:return: current time at the start of the DivideAndScan
-	:rtype: float
-	"""
-	timestart = time.time()
-	print(f'DivideAndScan {__version__} initiated at {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}\n')
-	return timestart
-
-
-def stop_timer(timestart):
-	"""
-	Stop runtime counter and print the elapsed time.
-
-	:param timestart: start time of DivideAndScan
-	:type timestart: float
-	"""
-	print(f'\nDivideAndScan done at {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())} with elapsed time {timedelta(seconds=time.time() - timestart)}')
+		:param msg: the message to print
+		:type msg: str
+		:param prefix: the prefix string, intended to be a counter when moving to next separated item
+		:type prefix: str
+		"""
+		print(f'\033[0;31m{SEP} \033[0;32m({prefix}) \033[1;32m{msg}\033[0;31m {SEP}\033[0m')

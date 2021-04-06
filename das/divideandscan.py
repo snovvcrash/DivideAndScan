@@ -8,7 +8,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFor
 from das.modules.add import AddMasscanOutput, AddRustscanOutput
 from das.modules.scan import ScanShow, ScanRun
 from das.modules.report import NmapMerger
-from das.modules.common import BANNER, print_info, print_success, print_error, start_timer, stop_timer
+from das.modules.common import BANNER, Logger
 
 
 def parse_args():
@@ -91,8 +91,10 @@ def main():
 		print(BANNER)
 		sys.exit(0)
 
+	logger = Logger()
+
 	if args.subparser == 'add' or args.subparser == 'scan' and not args.show:
-		timestart = start_timer()
+		logger.start_timer()
 
 	if args.subparser == 'add':
 		(Path.cwd() / '.db' / 'raw').mkdir(parents=True, exist_ok=True)
@@ -102,7 +104,7 @@ def main():
 		elif args.scanner_name == 'rustscan':
 			AddPortscanOutput = AddRustscanOutput
 		else:
-			print_error(f'{args.scanner_name}: Unsupported port scanner')
+			logger.print_error(f'{args.scanner_name}: Unsupported port scanner')
 			sys.exit(1)
 
 		P = Path.cwd() / '.db' / f'{args.db}.json'
@@ -111,13 +113,13 @@ def main():
 		portscan_out, num_of_hosts = apo.parse()
 
 		if P.exists():
-			print_info(f'Using DB -> {P.resolve()}')
+			logger.print_info(f'Using DB -> {P.resolve()}')
 
 		P = Path.cwd() / portscan_out
 		if P.exists():
-			print_info(f'Raw port scanner output -> {P.resolve()}')
+			logger.print_info(f'Raw port scanner output -> {P.resolve()}')
 
-		print_success(f'Successfully updated DB with {num_of_hosts} hosts')
+		logger.print_success(f'Successfully updated DB with {num_of_hosts} hosts')
 
 	elif args.subparser == 'scan':
 		(Path.cwd() / '.nmap').mkdir(exist_ok=True)
@@ -126,7 +128,7 @@ def main():
 
 		P = Path.cwd() / '.db' / f'{args.db}.json'
 		if P.exists():
-			print_info(f'Using DB -> {P.resolve()}')
+			logger.print_info(f'Using DB -> {P.resolve()}')
 
 		if args.show:
 			ss = ScanShow(str(P), args.hosts, args.ports)
@@ -160,7 +162,7 @@ def main():
 			nm.generate()
 
 	if args.subparser == 'add' or args.subparser == 'scan' and not args.show:
-		stop_timer(timestart)
+		logger.stop_timer()
 
 
 if __name__ == '__main__':

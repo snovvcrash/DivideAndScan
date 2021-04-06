@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 
 from tinydb import TinyDB
 
-from das.modules.common import print_cmd
+from das.modules.common import Logger
 
 
 class AddOutputBase(ABC):
@@ -37,7 +37,7 @@ class AddOutputBase(ABC):
 		self.portscan_out = f'.db/raw/{scanner_name}-{datetime.now().strftime("%Y%m%dT%H%M%S")}.out'
 		self.command = f"""sudo {scanner_name} {scanner_args} | tee {self.portscan_out}"""
 
-		print_cmd(self.command)
+		Logger.print_cmd(self.command)
 		os.system(self.command)
 
 		with open(self.portscan_out, 'r', encoding='utf-8') as fd:

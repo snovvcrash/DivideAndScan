@@ -12,7 +12,7 @@ from concurrent.futures import ProcessPoolExecutor
 from tinydb import TinyDB, Query
 from netaddr import IPNetwork
 
-from das.modules.common import print_info, print_success, print_cmd, print_separator
+from das.modules.common import Logger
 
 
 class ScanBase:
@@ -73,7 +73,7 @@ class ScanBase:
 
 			self.total_scans += len(self.port_dict)
 
-		print_info(f'Total scans -> {self.total_scans}')
+		Logger.print_info(f'Total scans -> {self.total_scans}')
 
 	@abstractmethod
 	def nmap_by_hosts(self):
@@ -101,7 +101,7 @@ class ScanShow(ScanBase):
 		"""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
-			print_success(f'IP {ip} ({len(ports)}) -> [{sorted_ports}]')
+			Logger.print_success(f'IP {ip} ({len(ports)}) -> [{sorted_ports}]')
 
 	def nmap_by_ports(self):
 		"""
@@ -109,7 +109,7 @@ class ScanShow(ScanBase):
 		"""
 		for port, ip_list in sorted(self.port_dict.items()):
 			sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
-			print_success(f'Port {port} ({len(ip_list)}) -> [{sorted_ip_list}]')
+			Logger.print_success(f'Port {port} ({len(ip_list)}) -> [{sorted_ip_list}]')
 
 
 class ScanRun(ScanBase):
@@ -129,7 +129,7 @@ class ScanRun(ScanBase):
 		nmap_commands, i = [], 1
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			if not parallel.enabled:
-				print_separator(f'IP: {ip}', prefix=f'{i}/{self.total_scans}')
+				Logger.print_separator(f'IP: {ip}', prefix=f'{i}/{self.total_scans}')
 
 			nmap_out = ip.replace('.', '-')
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
@@ -143,7 +143,7 @@ class ScanRun(ScanBase):
 				cmd += ' > /dev/null 2>&1'
 				nmap_commands.append(cmd)
 			else:
-				print_cmd(cmd)
+				Logger.print_cmd(cmd)
 				os.system(cmd)
 
 			i += 1
@@ -164,7 +164,7 @@ class ScanRun(ScanBase):
 		nmap_commands, i = [], 1
 		for port, ip_list in sorted(self.port_dict.items()):
 			if not parallel.enabled:
-				print_separator(f'Port: {port}', prefix=f'{i}/{self.total_scans}')
+				Logger.print_separator(f'Port: {port}', prefix=f'{i}/{self.total_scans}')
 
 			nmap_out = f'port{port}'
 			with NamedTemporaryFile('w+') as tmp:
@@ -177,13 +177,13 @@ class ScanRun(ScanBase):
 					cmd = f"""sudo nmap {nmap_opts} -oA .nmap/{nmap_out} -iL {tmp.name} -p{port}"""
 
 				sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
-				print_cmd(f'{tmp.name}: {sorted_ip_list}')
+				Logger.print_cmd(f'{tmp.name}: {sorted_ip_list}')
 
 				if parallel.enabled:
 					cmd += ' > /dev/null 2>&1'
 					nmap_commands.append(cmd)
 				else:
-					print_cmd(cmd)
+					Logger.print_cmd(cmd)
 					os.system(cmd)
 
 				i += 1
@@ -200,5 +200,5 @@ def nmap(command):
 	:param command: Nmap command to execute
 	:type command: str
 	"""
-	print_cmd(command, parallel=current_process().name)
+	Logger.print_cmd(command, parallel=current_process().name)
 	os.system(command)
