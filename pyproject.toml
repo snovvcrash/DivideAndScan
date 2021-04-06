@@ -10,8 +10,9 @@ repository = "https://github.com/snovvcrash/DivideAndScan"
 keywords = ["port-scanning", "enumeration", "nmap", "masscan", "rustscan"]
 classifiers = [
 	"Topic :: Security",
-	"Topic :: Port Scanning",
-	"Topic :: Penetration Testing"
+	"Programming Language :: Python :: 3",
+	"Environment :: Console",
+	"License :: OSI Approved :: BSD License"
 ]
 packages = [
 	{ include = "das" }
