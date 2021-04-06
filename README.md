@@ -12,7 +12,7 @@
   <a href="https://pypi.org/project/divideandscan"><img src="https://img.shields.io/pypi/status/divideandscan?label=pypi&color=2cffab&logo=pypi&logoColor=white&style=flat-square" alt="pypi" /></a>
   <a href="https://hub.docker.com/repository/docker/snovvcrash/divideandscan"><img src="https://img.shields.io/docker/cloud/build/snovvcrash/divideandscan?label=docker&color=099dec&logo=docker&logoColor=white&style=flat-square" alt="docker" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/issues?q=is%3Aopen+is%3Aissue"><img src="https://img.shields.io/github/issues/snovvcrash/DivideAndScan?logo=github&logoColor=white&style=flat-square" alt="issues" /></a>
-  <a href="https://twitter.com/snovvcrash"><img src="https://img.shields.io/twitter/follow/snovvcrash?label=%E2%80%8Esnovvcrash&style=social" alt="twitter">></a>
+  <a href="https://twitter.com/snovvcrash"><img src="https://img.shields.io/twitter/follow/snovvcrash?label=%E2%80%8Esnovvcrash&style=social" alt="twitter"></a>
 </p>
 
 ---
