@@ -28,7 +28,7 @@ def parse_args():
 	  das add masscan '-e eth0 --rate 1000 -iL hosts.txt --open -p1-65535'
 	  das add -db testdb -rm rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config --scan-order "Random"'
 	""".replace('\t', '')
-	add_parser = subparser.add_parser('add', help='run a full port scan {masscan,rustscan} and add the output to DB', epilog=add_epilog, formatter_class=RawDescriptionHelpFormatter)
+	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan {masscan,rustscan} and add the output to DB')
 	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
 	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options')
 	add_parser.add_argument('-db', action='store', type=str, default='das', help='DB name to save the output into')
@@ -42,7 +42,7 @@ def parse_args():
 	  das scan -db testdb -ports 22,80,443,445 -oA report2 -parallel
 	  das scan -db testdb -ports ports.txt -oA report2 -parallel -proc 4
 	""".replace('\t', '')
-	scan_parser = subparser.add_parser('scan', help='run targeted Nmap scans against hosts and ports from DB', epilog=scan_epilog, formatter_class=RawDescriptionHelpFormatter)
+	scan_parser = subparser.add_parser('scan', formatter_class=RawDescriptionHelpFormatter, epilog=scan_epilog, help='run targeted Nmap scans against hosts and ports from DB')
 	scan_parser.add_argument('-db', action='store', type=str, default='das', help='DB name to retrieve the input from')
 	scan_parser.add_argument('-nmap', action='store', type=str, default=None, help='custom Nmap options, so the final command will be "sudo nmap <OPTIONS> -oA scan/$output $ip -p$ports" (default is "sudo nmap -Pn -sV --version-intensity 6 -O -oA scan/$output $ip -p$ports")')
 	group_parallel = scan_parser.add_argument_group('parallelism')
@@ -66,7 +66,7 @@ def parse_args():
 	  das report -ports 22,80,443,445 -oA report2
 	  das report -ports ports.txt -oA report2
 	""".replace('\t', '')
-	report_parser = subparser.add_parser('report', help='merge separate Nmap outputs into a single report in different formats', epilog=report_epilog, formatter_class=RawDescriptionHelpFormatter)
+	report_parser = subparser.add_parser('report', formatter_class=RawDescriptionHelpFormatter, epilog=report_epilog, help='merge separate Nmap outputs into a single report in different formats')
 	group_action = report_parser.add_mutually_exclusive_group(required=True)
 	group_action.add_argument('-show', action='store_true', default=False, help='only show Nmap raw reports, do not merge into a file')
 	group_action.add_argument('-oA', action='store', type=str, default=None, help='final report filename without extension (all formats: HTML, XML, simple text, grepable)')
