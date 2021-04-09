@@ -11,9 +11,7 @@ from das.modules.common import Logger
 
 
 class AddOutputBase(ABC):
-	"""
-	Base class for updating DB with parsed portscan output.
-	"""
+	"""Base class for updating DB with parsed portscan output."""
 
 	def __init__(self, db, rm, scanner_name, scanner_args):
 		"""
@@ -45,16 +43,12 @@ class AddOutputBase(ABC):
 
 	@abstractmethod
 	def parse(self):
-		"""
-		Interface for a parsing method.
-		"""
+		"""Interface for a parsing method."""
 		raise NotImplementedError
 
 
 class AddMasscanOutput(AddOutputBase):
-	"""
-	Child class for processing Masscan output.
-	"""
+	"""Child class for processing Masscan output."""
 
 	def parse(self):
 		"""
@@ -83,9 +77,7 @@ class AddMasscanOutput(AddOutputBase):
 
 
 class AddRustscanOutput(AddOutputBase):
-	"""
-	Child class for processing RustScan output.
-	"""
+	"""Child class for processing RustScan output."""
 
 	def parse(self):
 		"""

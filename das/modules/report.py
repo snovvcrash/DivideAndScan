@@ -15,9 +15,7 @@ from das.modules.common import Logger
 
 
 class NmapMerger:
-	"""
-	Class for merging separate Nmap outputs into a single report in different formats.
-	"""
+	"""Class for merging separate Nmap outputs into a single report in different formats."""
 
 	def __init__(self, hosts, ports, output=None):
 		"""
@@ -86,9 +84,7 @@ class NmapMerger:
 			Logger.print_error(f'{xsltproc}: binary does not exist, install with "sudo apt install xsltproc -y"')
 
 	def show(self):
-		"""
-		Print raw Nmap reports in simple text format.
-		"""
+		"""Print raw Nmap reports in simple text format."""
 		text_reports = [r for r in self.nmap_reports if r.suffix == '.nmap']
 		total_reports = len(text_reports)
 		Logger.print_info(f'Total reports -> {total_reports}')
@@ -105,9 +101,7 @@ class NmapMerger:
 			i += 1
 
 	def generate(self):
-		"""
-		Perform all the steps needed to generate a single Nmap report.
-		"""
+		"""Perform all the steps needed to generate a single Nmap report."""
 		if self.output.format in ('oX', 'oA'):
 			merged_xml = f'{self.output.filename}.xml'
 			for report in self.nmap_reports:

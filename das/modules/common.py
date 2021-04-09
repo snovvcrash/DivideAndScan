@@ -23,9 +23,7 @@ SEP = '#############################################'
 
 
 class Logger:
-	"""
-	Event logger class (measures runtime, print messages).
-	"""
+	"""Event logger class (measures runtime, print messages)."""
 
 	def __init__(self):
 		"""
@@ -37,15 +35,11 @@ class Logger:
 		self.timestart = time.localtime()
 
 	def start_timer(self):
-		"""
-		Start runtime counter.
-		"""
+		"""Start runtime counter."""
 		print(f'DivideAndScan {__version__} initiated at {time.strftime("%Y-%m-%d %H:%M:%S", self.timestart)}\n')
 
 	def stop_timer(self):
-		"""
-		Stop runtime counter and print the elapsed time.
-		"""
+		"""Stop runtime counter and print the elapsed time."""
 		print(f'\nDivideAndScan done at {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())} with elapsed time {timedelta(seconds=time.time() - time.mktime(self.timestart))}')
 
 	@staticmethod

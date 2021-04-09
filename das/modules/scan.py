@@ -16,9 +16,7 @@ from das.modules.common import Logger
 
 
 class ScanBase:
-	"""
-	Base class for searching DB and/or initiating Nmap scans.
-	"""
+	"""Base class for searching DB and/or initiating Nmap scans."""
 
 	def __init__(self, db, hosts, ports):
 		"""
@@ -77,45 +75,33 @@ class ScanBase:
 
 	@abstractmethod
 	def nmap_by_hosts(self):
-		"""
-		Interface for a DB host searching method.
-		"""
+		"""Interface for a DB host searching method."""
 		raise NotImplementedError
 
 	@abstractmethod
 	def nmap_by_ports(self):
-		"""
-		Interface for a DB port searching method.
-		"""
+		"""Interface for a DB port searching method."""
 		raise NotImplementedError
 
 
 class ScanShow(ScanBase):
-	"""
-	Child class for searching through DB and printing the results.
-	"""
+	"""Child class for searching through DB and printing the results."""
 
 	def nmap_by_hosts(self):
-		"""
-		Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched.
-		"""
+		"""Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched."""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
 			Logger.print_success(f'IP {ip} ({len(ports)}) -> [{sorted_ports}]')
 
 	def nmap_by_ports(self):
-		"""
-		Search DB by ports and print mapping "open_port -> [live_hosts]". No Nmap scan is launched.
-		"""
+		"""Search DB by ports and print mapping "open_port -> [live_hosts]". No Nmap scan is launched."""
 		for port, ip_list in sorted(self.port_dict.items()):
 			sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
 			Logger.print_success(f'Port {port} ({len(ip_list)}) -> [{sorted_ip_list}]')
 
 
 class ScanRun(ScanBase):
-	"""
-	Child class for initiating Nmap scans.
-	"""
+	"""Child class for initiating Nmap scans."""
 
 	def nmap_by_hosts(self, nmap_opts, parallel):
 		"""

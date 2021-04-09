@@ -7,11 +7,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.2-success?style=flat-square" alt="version" />
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.1.2-success?style=flat-square" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white&style=flat-square" alt="python" /></a>
-  <a href="https://github.com/snovvcrash/DivideAndScan/issues?q=is%3Aopen+is%3Aissue"><img src="https://img.shields.io/github/issues/snovvcrash/DivideAndScan?logo=github&logoColor=white&style=flat-square" alt="issues" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml/badge.svg" alt="docker" /></a>
+  <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://twitter.com/snovvcrash"><img src="https://img.shields.io/twitter/follow/snovvcrash?label=%E2%80%8Esnovvcrash&style=social" alt="twitter"></a>
 </p>
 
@@ -31,26 +31,26 @@ Potential use cases:
 * Cybersecurity wargames / training CTF labs.
 * OSCP certification exam.
 
-# How It Works
+## How It Works
 
 ![how-it-works.png](https://user-images.githubusercontent.com/23141800/113610892-67566080-9656-11eb-8520-8fa2dcaf3463.png)
 
-# How to Install
+## How to Install
 
-## Prerequisites
+### Prerequisites
 
 To successfully *divide and scan* we need to get some good port scanning tools.
 
 📑 **Note:** if you don't feel like messing with dependecies on your host OS, skip to the [Docker](#using-from-docker) part.
 
-### Nmap
+#### Nmap
 
 ```bash
 sudo apt install nmap sudo xsltproc -y
 sudo nmap --script-updatedb
 ```
 
-### Masscan
+#### Masscan
 
 ```bash
 cd /tmp
@@ -61,7 +61,7 @@ sudo make install
 cd && rm -rf /tmp/masscan
 ```
 
-### RustScan
+#### RustScan
 
 ```bash
 cd /tmp
@@ -78,7 +78,7 @@ cd && rm /tmp/rustscan.deb
 sudo wget https://gist.github.com/snovvcrash/c7f8223cc27154555496a9cbb4650681/raw/a76a2c658370d8b823a8a38a860e4d88051b417e/rustscan-ports-top1000.toml -O /root/.rustscan.toml
 ```
 
-## Installation
+### Installation
 
 DivideAndScan is available on PyPI as `divideandscan`, though I recommend installing it from GitHub with [pipx](https://github.com/pipxproject/pipx) in order to always have the bleeding-edge version:
 
@@ -98,7 +98,7 @@ For debbugging purposes you can set up a dev environment with [poetry](https://g
 
 📑 **Note:** DivideAndScan uses sudo to run all the port scanners, so it will ask for the password when scanning commands are invoked.
 
-## Using from Docker
+### Using from Docker
 
 You can run DivideAndScan in a Docker container as follows:
 
@@ -113,13 +113,13 @@ Since the tool requires some input data and produces some output data, you shoul
 ~$ das
 ```
 
-# How to Use
+## How to Use
 
 ![how-to-use.png](https://user-images.githubusercontent.com/23141800/113610915-6fae9b80-9656-11eb-8b1a-db503dd43861.png)
 
 > More examples coming soon at [snovvcrash.rocks](https://snovvcrash.rocks/)...
 
-## 0. Preparations
+### 0. Preparations
 
 <table>
 <tr>
@@ -136,7 +136,7 @@ Make a new directory to start DivideAndScan from. The tool will create subdirect
 </tr>
 </table>
 
-## 1. Filling the DB
+### 1. Filling the DB
 
 <table>
 <tr>
@@ -159,7 +159,7 @@ When the module completes its work, a hidden directory `.db` is created in CWD c
 </tr>
 </table>
 
-## 2. Targeted Scanning
+### 2. Targeted Scanning
 
 <table>
 <tr>
@@ -196,7 +196,7 @@ Also, you can inspect the contents of the database with `-show` option before ac
 </tr>
 </table>
 
-## 3 (Optional). Merging the Reports
+### 3 (Optional). Merging the Reports
 
 <table>
 <tr>
@@ -221,7 +221,7 @@ In order to generate a report independently of the `scan` module, you should use
 </tr>
 </table>
 
-# Help
+## Help
 
 ```
 usage: das [-h] {add,scan,report} ...
@@ -248,11 +248,11 @@ optional arguments:
 Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 ```
 
-# ToDo
+## ToDo
 
 * [ ] Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser
 
-# Support
+## Support
 
 If this tool has been useful for you, feel free to buy me a <strike>beer</strike> coffee!
 
