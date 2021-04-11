@@ -27,6 +27,7 @@ divideandscan = 'das.divideandscan:main'
 python = "^3.7"
 tinydb = "^4.4.0"
 netaddr = "^0.8.0"
+defusedxml = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.9.0"
