@@ -215,7 +215,7 @@ In order to generate a report independently of the `scan` module, you should use
 ~$ das report -db testdb -ports ports.txt -oA report2
 ```
 
-📑 **Note:** keep in mind that the `report` module does **not** search the DB when processing the `-hosts` and `-ports` options, but looks for Nmap raw reports directly in `.nmap` directory instead; it means that `-hosts 127.0.0.1` argument value will be successfully resolved only if `.nmap/127-0-0-1.*` file exists, and `-ports 80` argument value will be successfully resolved only if `.nmap/port80.*` file exists.
+📑 **Note:** keep in mind that the `report` module does **not** search the DB when processing the `-hosts` or `-ports` options, but looks for Nmap raw reports directly in `.nmap` directory instead; it means that `-hosts 127.0.0.1` argument value will be successfully resolved only if `.nmap/127-0-0-1.*` file exists, and `-ports 80` argument value will be successfully resolved only if `.nmap/port80.*` file exists.
 
 </td>
 </tr>

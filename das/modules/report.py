@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
-# Stolen from: https://github.com/CBHue/nMap_Merger
-# Author: Hue B. Solutions LLC, CBHue
+# Based on: https://github.com/CBHue/nMap_Merger
+# Original author: Hue B. Solutions LLC, CBHue
 
 import os
 import socket
-import defusedxml.ElementTree as ET
 from pathlib import Path
 from collections import namedtuple
 
+import defusedxml.ElementTree as ET
 from netaddr import IPNetwork
 
 from das.modules.common import Logger
