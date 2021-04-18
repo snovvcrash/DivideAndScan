@@ -22,7 +22,7 @@
 2. Run Nmap individually for each target with version grabbing and NSE actions.
 3. Merge the results into a single Nmap report (different formats available).
 
-For the 1st phase a *fast* port scanner is intended to be used ([Masscan](https://github.com/robertdavidgraham/masscan) / [RustScan](https://github.com/RustScan/RustScan)) / [Naabu](https://github.com/projectdiscovery/naabu), whose output is parsed and stored in a database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
+For the 1st phase a *fast* port scanner is intended to be used ([Masscan](https://github.com/robertdavidgraham/masscan) / [RustScan](https://github.com/RustScan/RustScan) / [Naabu](https://github.com/projectdiscovery/naabu)), whose output is parsed and stored in a database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
 
 Potential use cases:
 
