@@ -39,7 +39,7 @@ class AddOutputBase(ABC):
 		os.system(self.command)
 
 		with open(self.portscan_out, 'r', encoding='utf-8') as fd:
-			self.portscan_raw = fd.read()
+			self.portscan_raw = fd.read().splitlines()
 
 	@abstractmethod
 	def parse(self):
@@ -57,10 +57,8 @@ class AddMasscanOutput(AddOutputBase):
 		:return: a pair of values (portscan raw output filename, number of hosts added to DB)
 		:rtype: tuple
 		"""
-		masscan_list = self.portscan_raw.strip().split('\n')
-
 		hosts = set()
-		for line in masscan_list:
+		for line in self.portscan_raw:
 			try:
 				ip = line.split()[-1]
 				port, proto = line.split()[3].split('/')
@@ -71,6 +69,7 @@ class AddMasscanOutput(AddOutputBase):
 					item = {'ip': ip, 'port': int(port)}
 					if item not in self.db:
 						self.db.insert(item)
+
 				hosts.add(ip)
 
 		return (self.portscan_out, len(hosts))
@@ -86,10 +85,8 @@ class AddRustscanOutput(AddOutputBase):
 		:return: a pair of values (portscan raw output filename, number of hosts added to DB)
 		:rtype: tuple
 		"""
-		rustscan_list = self.portscan_raw.strip().split('\n')
-
 		hosts = set()
-		for line in rustscan_list:
+		for line in self.portscan_raw:
 			try:
 				ip, ports = line.split(' -> ')
 			except:
@@ -99,6 +96,33 @@ class AddRustscanOutput(AddOutputBase):
 					item = {'ip': ip, 'port': port}
 					if item not in self.db:
 						self.db.insert(item)
+
+				hosts.add(ip)
+
+		return (self.portscan_out, len(hosts))
+
+
+class AddNaabuOutput(AddOutputBase):
+	"""Child class for processing Naabu output."""
+
+	def parse(self):
+		"""
+		Naabu raw output parser.
+
+		:return: a pair of values (portscan raw output filename, number of hosts added to DB)
+		:rtype: tuple
+		"""
+		hosts = set()
+		for line in self.portscan_raw:
+			try:
+				ip, port = line.split(':')
+			except:
+				pass
+			else:
+				item = {'ip': ip, 'port': int(port)}
+				if item not in self.db:
+					self.db.insert(item)
+
 				hosts.add(ip)
 
 		return (self.portscan_out, len(hosts))

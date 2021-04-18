@@ -7,12 +7,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.1.2-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.1.3-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-docker-hub.yml/badge.svg" alt="docker" /></a>
-  <a href="https://twitter.com/snovvcrash"><img src="https://img.shields.io/twitter/follow/snovvcrash?label=%E2%80%8Esnovvcrash&style=social" alt="twitter"></a>
 </p>
 
 ---
@@ -23,7 +22,7 @@
 2. Run Nmap individually for each target with version grabbing and NSE actions.
 3. Merge the results into a single Nmap report (different formats available).
 
-For the 1st phase a *fast* port scanner is intended to be used ([Masscan](https://github.com/robertdavidgraham/masscan) / [RustScan](https://github.com/RustScan/RustScan)), whose output is parsed and stored in a database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / Simple text / Grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
+For the 1st phase a *fast* port scanner is intended to be used ([Masscan](https://github.com/robertdavidgraham/masscan) / [RustScan](https://github.com/RustScan/RustScan)) / [Naabu](https://github.com/projectdiscovery/naabu), whose output is parsed and stored in a database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
 
 Potential use cases:
 
@@ -78,6 +77,24 @@ cd && rm /tmp/rustscan.deb
 sudo wget https://gist.github.com/snovvcrash/c7f8223cc27154555496a9cbb4650681/raw/a76a2c658370d8b823a8a38a860e4d88051b417e/rustscan-ports-top1000.toml -O /root/.rustscan.toml
 ```
 
+#### Naabu
+
+```bash
+sudo mkdir /opt/projectdiscovery
+cd /opt/projectdiscovery
+
+wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
+| grep "browser_download_url.*linux-amd64.tar.gz" \
+| cut -d: -f2,3 \
+| tr -d \" \
+| sudo wget -qO naabu.tar.gz -i-
+
+sudo tar -xzf naabu.tar.gz
+sudo mv naabu-linux-amd64 naabu
+sudo rm LICENSE.md naabu.tar.gz README.md
+sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
+```
+
 ### Installation
 
 DivideAndScan is available on PyPI as `divideandscan`, though I recommend installing it from GitHub with [pipx](https://github.com/pipxproject/pipx) in order to always have the bleeding-edge version:
@@ -125,7 +142,7 @@ Since the tool requires some input data and produces some output data, you shoul
 <tr>
 <td>
 
-Make a new directory to start DivideAndScan from. The tool will create subdirectories to store the output, so I recommend launching it from a clean directory to stay organized:
+Make a new directory to start DivideAndScan from. The tool will create subdirectories in CWD to store the output, so I recommend launching it from a clean directory to stay organized:
 
 ```console
 ~$ mkdir divideandscan
@@ -142,7 +159,7 @@ Make a new directory to start DivideAndScan from. The tool will create subdirect
 <tr>
 <td>
 
-Provide the `add` module a command for either Masscan or RustScan to discover open ports in a desired range.
+Provide the `add` module a command for a fast port scanner to discover open ports in a desired range.
 
 ⚠️ **Warning:** please, make sure that you understand what you're doing, because nearly all port scanning tools [can damage the system being tested](https://github.com/RustScan/RustScan/wiki/Usage#%EF%B8%8F-warning) if used improperly.
 
@@ -151,6 +168,8 @@ Provide the `add` module a command for either Masscan or RustScan to discover op
 ~$ das add -db testdb masscan '--rate 1000 -iL hosts.txt --open -p1-65535'
 # RustScan example
 ~$ das add -db testdb rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
+# Naabu example
+~$ das add -db testdb naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
 ```
 
 When the module completes its work, a hidden directory `.db` is created in CWD containig the database file and raw scan results.
@@ -238,7 +257,7 @@ usage: das [-h] {add,scan,report} ...
 
 positional arguments:
   {add,scan,report}
-    add              run a full port scan {masscan,rustscan} and add the output to DB
+    add              run a full port scan {masscan,rustscan,naabu} and add the output to DB
     scan             run targeted Nmap scans against hosts and ports from DB
     report           merge separate Nmap outputs into a single report in different formats
 
@@ -250,7 +269,7 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 
 ## ToDo
 
-* [ ] Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser
+* [x] Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser
 * [ ] Add armada scanner (?) parser
 
 ## Support
