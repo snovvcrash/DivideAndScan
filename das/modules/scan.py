@@ -36,9 +36,12 @@ class ScanBase:
 		self.total_scans = 0
 
 		if hosts:
-			if Path(hosts).exists():
-				with open(hosts, 'r') as fd:
-					hosts = ','.join(i.strip() for i in fd.read().splitlines())
+			try:
+				if Path(hosts).exists():
+					with open(hosts, 'r') as fd:
+						hosts = ','.join(i.strip() for i in fd.read().splitlines())
+			except OSError:  # catching [Errno 36] File name too long
+				pass
 
 			if hosts == 'all':
 				result = self.db.all()
@@ -55,9 +58,12 @@ class ScanBase:
 			self.total_scans += len(self.ip_dict)
 
 		elif ports:
-			if Path(ports).exists():
-				with open(ports, 'r') as fd:
-					ports = ','.join(i.strip() for i in fd.read().splitlines())
+			try:
+				if Path(ports).exists():
+					with open(ports, 'r') as fd:
+						ports = ','.join(i.strip() for i in fd.read().splitlines())
+			except OSError:  # catching [Errno 36] File name too long
+				pass
 
 			if ports == 'all':
 				result = self.db.all()

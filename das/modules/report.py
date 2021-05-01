@@ -42,9 +42,12 @@ class NmapMerger:
 		P = list(P)
 
 		if hosts:
-			if Path(hosts).exists():
-				with open(hosts, 'r') as fd:
-					hosts = ','.join(i.strip() for i in fd.read().splitlines())
+			try:
+				if Path(hosts).exists():
+					with open(hosts, 'r') as fd:
+						hosts = ','.join(i.strip() for i in fd.read().splitlines())
+			except OSError:  # catching [Errno 36] File name too long
+				pass
 
 			if hosts == 'all':
 				self.nmap_reports = {x for x in P if not x.stem.startswith('port')}
@@ -55,9 +58,12 @@ class NmapMerger:
 				self.nmap_reports = {x for h in hosts for x in P if h == x.stem}
 
 		elif ports:
-			if Path(ports).exists():
-				with open(ports, 'r') as fd:
-					ports = ','.join(i.strip() for i in fd.read().splitlines())
+			try:
+				if Path(ports).exists():
+					with open(ports, 'r') as fd:
+						ports = ','.join(i.strip() for i in fd.read().splitlines())
+			except OSError:  # catching [Errno 36] File name too long
+				pass
 
 			if ports == 'all':
 				self.nmap_reports = {x for x in P if x.stem.startswith('port')}
