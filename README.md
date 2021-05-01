@@ -89,10 +89,10 @@ wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
 | tr -d \" \
 | sudo wget -qO naabu.tar.gz -i-
 
-sudo tar -xzf naabu.tar.gz
+sudo tar -xvzf naabu.tar.gz
 sudo mv naabu-linux-amd64 naabu
-sudo rm LICENSE.md naabu.tar.gz README.md
-sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
+sudo rm naabu.tar.gz README.md LICENSE.md
+sudo ln -vs /opt/projectdiscovery/naabu /usr/local/bin/naabu
 ```
 
 ### Installation
@@ -165,11 +165,11 @@ Provide the `add` module a command for a fast port scanner to discover open port
 
 ```console
 # Masscan example
-~$ das add -db testdb masscan '--rate 1000 -iL hosts.txt --open -p1-65535'
+~$ das add masscan '--rate 1000 -iL hosts.txt --open -p1-65535'
 # RustScan example
-~$ das add -db testdb rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
+~$ das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
 # Naabu example
-~$ das add -db testdb naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
+~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
 ```
 
 When the module completes its work, a hidden directory `.db` is created in CWD containig the database file and raw scan results.
@@ -188,19 +188,19 @@ Launch targeted Nmap scans with the `scan` module. You can adjust the scan surfa
 
 ```console
 # Scan by hosts
-~$ das scan -db testdb -hosts all -oA report1
-~$ das scan -db testdb -hosts 192.168.1.0/24,10.10.13.37 -oA report1
-~$ das scan -db testdb -hosts hosts.txt -oA report1
+~$ das scan -hosts all -oA report1
+~$ das scan -hosts 192.168.1.0/24,10.10.13.37 -oA report1
+~$ das scan -hosts hosts.txt -oA report1
 # Scan by ports
-~$ das scan -db testdb -ports all -oA report2
-~$ das scan -db testdb -ports 22,80,443,445 -oA report2
-~$ das scan -db testdb -ports ports.txt -oA report2
+~$ das scan -ports all -oA report2
+~$ das scan -ports 22,80,443,445 -oA report2
+~$ das scan -ports ports.txt -oA report2
 ```
 
 To start Nmap simultaneously in multiple processes, specify the `-parallel` switch and set number of workers with the `-proc` option (if no value is provided, it will default to the number of processors on the machine):
 
 ```console
-~$ das scan -db testdb -hosts all -oA report -parallel [-proc 4]
+~$ das scan -hosts all -oA report -parallel [-proc 4]
 ```
 
 The output format is selected with `-oX`, `-oN`, `-oG` and `-oA` options for XML+HTML formats, simple text format, grepable format and all formats respectively. When the module completes its work, a hidden directory `.nmap` is created in CWD containig Nmap raw scan reports.
@@ -208,7 +208,7 @@ The output format is selected with `-oX`, `-oN`, `-oG` and `-oA` options for XML
 Also, you can inspect the contents of the database with `-show` option before actually launching the scans:
 
 ```console
-~$ das scan -db testdb -hosts all -show
+~$ das scan -hosts all -show
 ```
 
 </td>
@@ -225,13 +225,13 @@ In order to generate a report independently of the `scan` module, you should use
 
 ```console
 # Merge outputs by hosts
-~$ das report -db testdb -hosts all -oA report1
-~$ das report -db testdb -hosts 192.168.1.0/24,10.10.13.37 -oA report1
-~$ das report -db testdb -hosts hosts.txt -oA report1
+~$ das report -hosts all -oA report1
+~$ das report -hosts 192.168.1.0/24,10.10.13.37 -oA report1
+~$ das report -hosts hosts.txt -oA report1
 # Merge outputs by ports
-~$ das report -db testdb -ports all -oA report2
-~$ das report -db testdb -ports 22,80,443,445 -oA report2
-~$ das report -db testdb -ports ports.txt -oA report2
+~$ das report -ports all -oA report2
+~$ das report -ports 22,80,443,445 -oA report2
+~$ das report -ports ports.txt -oA report2
 ```
 
 📑 **Note:** keep in mind that the `report` module does **not** search the DB when processing the `-hosts` or `-ports` options, but looks for Nmap raw reports directly in `.nmap` directory instead; it means that `-hosts 127.0.0.1` argument value will be successfully resolved only if `.nmap/127-0-0-1.*` file exists, and `-ports 80` argument value will be successfully resolved only if `.nmap/port80.*` file exists.

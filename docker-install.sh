@@ -42,7 +42,7 @@ wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
 
 tar -xzf naabu.tar.gz
 mv naabu-linux-amd64 naabu
-rm LICENSE.md naabu.tar.gz README.md
+rm naabu.tar.gz README.md LICENSE.md
 ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 
 # DivideAndScan
