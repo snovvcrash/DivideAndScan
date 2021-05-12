@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.1.3-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.1.4-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -134,8 +134,6 @@ Since the tool requires some input data and produces some output data, you shoul
 
 ![how-to-use.png](https://user-images.githubusercontent.com/23141800/113610915-6fae9b80-9656-11eb-8b1a-db503dd43861.png)
 
-> More examples coming soon at [snovvcrash.rocks](https://snovvcrash.rocks/)...
-
 ### 0. Preparations
 
 <table>
@@ -164,12 +162,14 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ⚠️ **Warning:** please, make sure that you understand what you're doing, because nearly all port scanning tools [can damage the system being tested](https://github.com/RustScan/RustScan/wiki/Usage#%EF%B8%8F-warning) if used improperly.
 
 ```console
-# Masscan example
-~$ das add masscan '--rate 1000 -iL hosts.txt --open -p1-65535'
-# RustScan example
+# Masscan
+~$ das add masscan '--rate 1000 -iL hosts.txt -p1-65535 --open'
+# RustScan
 ~$ das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
-# Naabu example
+# Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
+# Nmap, -v flag is always required!
+~$ das add nmap '-n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open -v'
 ```
 
 When the module completes its work, a hidden directory `.db` is created in CWD containig the database file and raw scan results.
@@ -240,6 +240,56 @@ In order to generate a report independently of the `scan` module, you should use
 </tr>
 </table>
 
+<details>
+<summary><strong>🔥 Example 🔥</strong></summary>
+
+Let's enumerate all live machines on [Hack The Box](https://www.hackthebox.eu/home/machines).
+
+1. Add mappings "host ⇄ open ports" to the database with Masscan. For demonstration purposes I will exclude dynamic port range to avoid unnecessary stuff by using `-p1-49151`. On the second screenshot I'm reviewing scan results by hosts and by ports:
+
+```console
+~$ das add -db htb -rm masscan '-e tun0 --rate 1000 -iL hosts.txt -p1-49151 --open'
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23141800/117919590-f578d300-b2f5-11eb-8afb-f8e3ed851e62.png" alt="example-1.png">
+</p>
+
+```console
+~$ das scan -db htb -hosts all -show
+~$ das scan -db htb -ports all -show
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23141800/117919602-fa3d8700-b2f5-11eb-8d4a-f2edb0272e2e.png" alt="example-2.png">
+</p>
+
+2. Launch Nmap processes for each target to enumerate only ports that we're interested in (the open ports). On the second screenshot I'm doing the same but starting Nmap processes simultaneously:
+
+```console
+~$ das scan -db htb -hosts all -oA report
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23141800/117919624-03c6ef00-b2f6-11eb-9539-64a5a6ced1cf.png" alt="example-3.png">
+</p>
+
+```console
+~$ das scan -db htb -hosts all -oA report -nmap '-Pn -sVC -O' -parallel
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23141800/117919633-0a556680-b2f6-11eb-8cbe-78d1e9ce16f1.png" alt="example-4.png">
+</p>
+
+3. As a result we now have a single report in all familiar Nmap formats (simple text, grepable, XML) as well as a pretty HTML report.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/23141800/117919635-0c1f2a00-b2f6-11eb-933f-ee812e6f6bd0.png" alt="example-5.png">
+</p>
+
+</details>
+
 ## Help
 
 ```
@@ -257,7 +307,7 @@ usage: das [-h] {add,scan,report} ...
 
 positional arguments:
   {add,scan,report}
-    add              run a full port scan {masscan,rustscan,naabu} and add the output to DB
+    add              run a full port scan {masscan,rustscan,naabu,nmap} and add the output to DB
     scan             run targeted Nmap scans against hosts and ports from DB
     report           merge separate Nmap outputs into a single report in different formats
 
