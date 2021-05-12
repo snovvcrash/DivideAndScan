@@ -243,7 +243,7 @@ In order to generate a report independently of the `scan` module, you should use
 <details>
 <summary><strong>🔥 Example 🔥</strong></summary>
 
-Let's enumerate all live machines on [Hack The Box](https://www.hackthebox.eu/home/machines).
+Let's enumerate open ports for all live machines on [Hack The Box](https://www.hackthebox.eu/home/machines).
 
 1. Add mappings "host ⇄ open ports" to the database with Masscan. For demonstration purposes I will exclude dynamic port range to avoid unnecessary stuff by using `-p1-49151`. On the second screenshot I'm reviewing scan results by hosts and by ports:
 
