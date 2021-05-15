@@ -168,7 +168,7 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ~$ das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
 # Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
-# Nmap, -v flag is always required!
+# Nmap, -v flag is always required for correct parsing!
 ~$ das add nmap '-n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open -v'
 ```
 
