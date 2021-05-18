@@ -169,7 +169,7 @@ Provide the `add` module a command for a fast port scanner to discover open port
 # Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
 # Nmap, -v flag is always required for correct parsing!
-~$ das add nmap '-n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open -v'
+~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 ```
 
 When the module completes its work, a hidden directory `.db` is created in CWD containig the database file and raw scan results.
