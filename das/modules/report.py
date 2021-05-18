@@ -179,6 +179,7 @@ class NmapMerger:
 		tree = ET.parse(xml_report)
 		root = tree.getroot()
 		nmaprun = root.attrib
+		nmaprun['args'] = nmaprun['args'].replace('"', '\\"')
 		scaninfo = root.find('scaninfo').attrib
 		return {**nmaprun, **scaninfo}
 
