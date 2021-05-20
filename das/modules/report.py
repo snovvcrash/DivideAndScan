@@ -179,9 +179,14 @@ class NmapMerger:
 		tree = ET.parse(xml_report)
 		root = tree.getroot()
 		nmaprun = root.attrib
-		nmaprun['args'] = nmaprun['args'].replace('"', '\\"')
 		scaninfo = root.find('scaninfo').attrib
-		return {**nmaprun, **scaninfo}
+		merged = {**nmaprun, **scaninfo}
+
+		d = {}
+		for key, value in merged.items():
+			d[key] = value.replace('"', '&quot;')
+
+		return d
 
 	@staticmethod
 	def add_header(merged_xml, d):
