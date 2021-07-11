@@ -74,7 +74,7 @@ wget -qO- https://api.github.com/repos/RustScan/RustScan/releases/latest \
 sudo dpkg -i rustscan.deb
 cd && rm /tmp/rustscan.deb
 
-sudo wget https://gist.github.com/snovvcrash/c7f8223cc27154555496a9cbb4650681/raw/a76a2c658370d8b823a8a38a860e4d88051b417e/rustscan-ports-top1000.toml -O /root/.rustscan.toml
+sudo wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/raw/fe8628396616c4bf7a3e25f2c9d1acc2f36af0c0/rustscan-ports-top1000.toml -O /root/.rustscan.toml
 ```
 
 #### Naabu
