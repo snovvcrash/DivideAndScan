@@ -320,7 +320,8 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 ## ToDo
 
 * [x] Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser
-* [ ] Add armada scanner (?) parser
+* [ ] Add [NimScan](https://github.com/elddy/NimScan) parser
+* [ ] Add armada (?) parser
 
 ## Support
 
