@@ -22,13 +22,21 @@
 2. Run Nmap individually for each target with version grabbing and NSE actions.
 3. Merge the results into a single Nmap report (different formats available).
 
-For the 1st phase a *fast* port scanner is intended to be used ([Masscan](https://github.com/robertdavidgraham/masscan) / [RustScan](https://github.com/RustScan/RustScan) / [Naabu](https://github.com/projectdiscovery/naabu)), whose output is parsed and stored in a single file database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
+For the 1st phase a *fast* port scanner\* is intended to be used, whose output is parsed and stored in a single file database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
 
 Potential use cases:
 
 * Pentest engagements / red teaming with a large scope to enumerate.
 * Cybersecurity wargames / training CTF labs.
 * OSCP certification exam.
+
+\* Available port scanners:
+
+* [Masscan](https://github.com/robertdavidgraham/masscan)
+* [RustScan](https://github.com/RustScan/RustScan)
+* [Naabu](https://github.com/projectdiscovery/naabu)
+* [NimScan](https://github.com/elddy/NimScan)
+* [Nmap](https://github.com/nmap/nmap)
 
 ## How It Works
 
@@ -93,6 +101,22 @@ sudo tar -xvzf naabu.tar.gz
 sudo mv naabu-linux-amd64 naabu
 sudo rm naabu.tar.gz README.md LICENSE.md
 sudo ln -vs /opt/projectdiscovery/naabu /usr/local/bin/naabu
+```
+
+#### NimScan
+
+```bash
+sudo mkdir /opt/nimscan
+cd /opt/nimscan
+
+wget -qO- https://api.github.com/repos/elddy/NimScan/releases/latest \
+| grep 'browser_download_url.*NimScan"' \
+| cut -d: -f2,3 \
+| tr -d \" \
+| sudo wget -qO nimscan -i-
+
+sudo chmod +x nimscan
+sudo ln -s /opt/nimscan/nimscan /usr/local/bin/nimscan
 ```
 
 ### Installation
@@ -168,6 +192,8 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ~$ das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
 # Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
+# NimScan
+~$ das add nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 # Nmap, -v flag is always required for correct parsing!
 ~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 ```
@@ -293,7 +319,7 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 ## Help
 
 ```
-usage: das [-h] {add,scan,report} ...
+usage: das [-h] {add,scan,report,help} ...
 
  -----------------------------------------------------------------------------------------------
 |  ________  .__      .__    .___        _____              .____________                       |
@@ -306,21 +332,22 @@ usage: das [-h] {add,scan,report} ...
  -----------------------------------------------------------------------------------------------
 
 positional arguments:
-  {add,scan,report}
-    add              run a full port scan {masscan,rustscan,naabu,nmap} and add the output to DB
-    scan             run targeted Nmap scans against hosts and ports from DB
-    report           merge separate Nmap outputs into a single report in different formats
+  {add,scan,report,help}
+    add                 run a full port scan and add the output to DB
+    scan                run targeted Nmap scans against hosts and ports from DB
+    report              merge separate Nmap outputs into a single report in different formats
+    help                show builtin --help dialog of a selected port scanner
 
 optional arguments:
-  -h, --help         show this help message and exit
+  -h, --help            show this help message and exit
 
 Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 ```
 
 ## ToDo
 
-* [x] Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser
-* [ ] Add [NimScan](https://github.com/elddy/NimScan) parser
+* [x] <strike>Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser</strike>
+* [x] <strike>Add [elddy/NimScan](https://github.com/elddy/NimScan) parser</strike>
 * [ ] Add armada (?) parser
 
 ## Support

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 from pathlib import Path
 from collections import namedtuple
 from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFormatter
 
-from das.modules.add import AddMasscanOutput, AddRustscanOutput, AddNaabuOutput, AddNmapOutput
+from das.modules.add import AddMasscanOutput, AddRustscanOutput, AddNaabuOutput, AddNimscanOutput, AddNmapOutput
 from das.modules.scan import ScanShow, ScanRun
 from das.modules.report import NmapMerger
 from das.modules.common import BANNER, Logger
@@ -27,11 +28,12 @@ def parse_args():
 
 	  das add masscan '-e eth0 --rate 1000 -iL hosts.txt -p1-65535 --open'
 	  das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config --scan-order "Random"'
-	  das add -db testdb -rm naabu '-interface eth0 -rate 1000 -iL hosts.txt -p - -silent -s s'
+	  das add -db testdb naabu '-interface eth0 -rate 1000 -iL hosts.txt -p - -silent -s s'
+	  das add -db testdb -rm nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 	  das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-49151 --open'
 	""".replace('\t', '')
-	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan {masscan,rustscan,naabu,nmap} and add the output to DB')
-	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
+	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan and add the output to DB')
+	add_parser.add_argument('scanner_name', action='store', type=str, choices=['masscan', 'rustscan', 'naabu', 'nimscan', 'nmap'], help='port scanner name')
 	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options')
 	add_parser.add_argument('-db', action='store', type=str, default='das', help='DB name to save the output into')
 	add_parser.add_argument('-rm', action='store_true', default=False, help='drop the DB before updating its values')
@@ -79,6 +81,9 @@ def parse_args():
 	group_criteria.add_argument('-hosts', action='store', type=str, help='hosts to add to report by IP (a comma-separated string of IPs and/or CIDRs or a filename; "all" for all host reports in Nmap directory)')
 	group_criteria.add_argument('-ports', action='store', type=str, help='hosts to add to report by port (a comma-separated string of ports or a filename; "all" for all port reports in Nmap directory)')
 
+	helper_parser = subparser.add_parser('help', help='show builtin --help dialog of a selected port scanner')
+	helper_parser.add_argument('scanner_name', action='store', type=str, choices=['masscan', 'rustscan', 'naabu', 'nimscan', 'nmap'], help='port scanner name')
+
 	return parser.parse_args()
 
 
@@ -107,6 +112,8 @@ def main():
 			AddPortscanOutput = AddRustscanOutput
 		elif args.scanner_name == 'naabu':
 			AddPortscanOutput = AddNaabuOutput
+		elif args.scanner_name == 'nimscan':
+			AddPortscanOutput = AddNimscanOutput
 		elif args.scanner_name == 'nmap':
 			AddPortscanOutput = AddNmapOutput
 		else:
@@ -166,6 +173,20 @@ def main():
 		elif any(o for o in output.values()):
 			nm = NmapMerger(args.hosts, args.ports, output)
 			nm.generate()
+
+	elif args.subparser == 'help':
+		if args.scanner_name == 'masscan':
+			os.system('masscan --help')
+		elif args.scanner_name == 'rustscan':
+			os.system('rustscan --help')
+		elif args.scanner_name == 'naabu':
+			os.system('naabu --help')
+		elif args.scanner_name == 'nimscan':
+			os.system('nimscan --help')
+		elif args.scanner_name == 'nmap':
+			os.system('nmap --help')
+		else:
+			logger.print_error(f'{args.scanner_name}: Unsupported port scanner')
 
 	if args.subparser == 'add' or args.subparser == 'scan' and not args.show:
 		logger.stop_timer()

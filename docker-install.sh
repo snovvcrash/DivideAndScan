@@ -45,6 +45,20 @@ mv naabu-linux-amd64 naabu
 rm naabu.tar.gz README.md LICENSE.md
 ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 
+# NimScan
+
+mkdir /opt/nimscan
+cd /opt/nimscan
+
+wget -qO- https://api.github.com/repos/elddy/NimScan/releases/latest \
+| grep 'browser_download_url.*NimScan"' \
+| cut -d: -f2,3 \
+| tr -d \" \
+| wget -qO nimscan -i-
+
+chmod +x nimscan
+ln -s /opt/nimscan/nimscan /usr/local/bin/nimscan
+
 # DivideAndScan
 
 cd /app
