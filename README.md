@@ -318,25 +318,25 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 
 ## Bring Your Own Scanner!
 
-You can pair your favourite port scanner with DivideAndScan by implementing a single **parse** method in `das/parsers/<DUMMY_SCANNER>.py`:
+You can pair your favourite port scanner with DivideAndScan by implementing a single **parse** method in `das/parsers/DUMMY_SCANNER.py`:
 
 ```python
 from das.parsers import IAddPortscanOutput
 
 
 class AddPortscanOutput(IAddPortscanOutput):
-    """Child class for processing <DUMMY_SCANNER> output."""
+    """Child class for processing DUMMY_SCANNER output."""
 
     def parse(self):
         """
-        <DUMMY_SCANNER> raw output parser.
+        DUMMY_SCANNER raw output parser.
 
         :return: a pair of values (portscan raw output filename, number of hosts added to DB)
         :rtype: tuple
         """
         hosts = set()
         for line in self.portscan_raw:
-            # <DUMMY_SCANNER> parser implementation
+            # DUMMY_SCANNER parser implementation
             pass
 
         return (self.portscan_out, len(hosts))
