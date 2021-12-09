@@ -17,7 +17,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 		for line in self.portscan_raw:
 			try:
 				ip, ports = line.split(' -> ')
-			except:
+			except Exception:
 				pass
 			else:
 				for port in ast.literal_eval(ports):
