@@ -20,7 +20,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 				ip = ip.strip('0')
 				port = port.split('[')[0]
 				port = ''.join([i if 48 <= ord(i) <= 57 else '' for i in port])
-			except:
+			except Exception:
 				pass
 			else:
 				item = {'ip': ip, 'port': int(port)}

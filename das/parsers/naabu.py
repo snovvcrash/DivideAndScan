@@ -15,7 +15,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 		for line in self.portscan_raw:
 			try:
 				ip, port = line.split(':')
-			except:
+			except Exception:
 				pass
 			else:
 				item = {'ip': ip, 'port': int(port)}

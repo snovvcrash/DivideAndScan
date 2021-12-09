@@ -16,7 +16,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 			try:
 				ip = line.split()[-1]
 				port, proto = line.split()[3].split('/')
-			except:
+			except Exception:
 				pass
 			else:
 				if proto == 'tcp':

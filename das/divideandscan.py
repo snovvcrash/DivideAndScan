@@ -82,7 +82,7 @@ def parse_args():
 	group_criteria.add_argument('-ports', action='store', type=str, help='hosts to add to report by port (a comma-separated string of ports or a filename; "all" for all port reports in Nmap directory)')
 
 	helper_parser = subparser.add_parser('help', help='show builtin --help dialog of a selected port scanner')
-	helper_parser.add_argument('scanner_name', action='store', type=str, choices=['masscan', 'rustscan', 'naabu', 'nimscan', 'nmap'], help='port scanner name')
+	helper_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
 
 	return parser.parse_args()
 
@@ -106,18 +106,19 @@ def main():
 	if args.subparser == 'add':
 		(Path.cwd() / '.db' / 'raw').mkdir(parents=True, exist_ok=True)
 
+		scanner_name = Path(args.scanner_name).name
 		try:
-			AddPortscanOutput = import_module(f'das.parsers.{args.scanner_name}', 'AddPortscanOutput').AddPortscanOutput
+			AddPortscanOutput = import_module(f'das.parsers.{scanner_name}', 'AddPortscanOutput').AddPortscanOutput
 		except ModuleNotFoundError:
-			logger.print_error(f"Unsupported port scanner '{args.scanner_name}'")
+			logger.print_error(f"Unsupported port scanner '{scanner_name}'")
 			sys.exit(1)
 		except Exception as e:
-			logger.print_error(f"Unknown error while loading '{args.scanner_name}' parser: {str(e)}")
+			logger.print_error(f"Unknown error while loading '{scanner_name}' parser: {str(e)}")
 			sys.exit(1)
 
 		P = Path.cwd() / '.db' / f'{args.db}.json'
 
-		apo = AddPortscanOutput(str(P), args.rm, args.scanner_name, args.scanner_args)
+		apo = AddPortscanOutput(str(P), args.rm, scanner_name, args.scanner_args)
 		portscan_out, num_of_hosts = apo.parse()
 
 		if P.exists():
@@ -170,18 +171,7 @@ def main():
 			nm.generate()
 
 	elif args.subparser == 'help':
-		if args.scanner_name == 'masscan':
-			os.system('masscan --help')
-		elif args.scanner_name == 'rustscan':
-			os.system('rustscan --help')
-		elif args.scanner_name == 'naabu':
-			os.system('naabu --help')
-		elif args.scanner_name == 'nimscan':
-			os.system('nimscan --help')
-		elif args.scanner_name == 'nmap':
-			os.system('nmap --help')
-		else:
-			logger.print_error(f'{args.scanner_name}: Unsupported port scanner')
+		os.system(f'{args.scanner_name} --help')
 
 	if args.subparser == 'add' or args.subparser == 'scan' and not args.show:
 		logger.stop_timer()
