@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.1.9-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.0-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -315,6 +315,32 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 </p>
 
 </details>
+
+## Bring Your Own Scanner!
+
+You can pair your favourite port scanner with DivideAndScan by implementing a single **parse** method in `das/parsers/<DUMMY_SCANNER>.py`:
+
+```python
+from das.parsers import IAddPortscanOutput
+
+
+class AddPortscanOutput(IAddPortscanOutput):
+    """Child class for processing <DUMMY_SCANNER> output."""
+
+    def parse(self):
+        """
+        <DUMMY_SCANNER> raw output parser.
+
+        :return: a pair of values (portscan raw output filename, number of hosts added to DB)
+        :rtype: tuple
+        """
+        hosts = set()
+        for line in self.portscan_raw:
+            # <DUMMY_SCANNER> parser implementation
+            pass
+
+        return (self.portscan_out, len(hosts))
+```
 
 ## Help
 

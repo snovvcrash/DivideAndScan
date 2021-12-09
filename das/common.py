@@ -2,7 +2,7 @@
 
 __author__ = '@snovvcrash'
 __site__ = 'https://github.com/snovvcrash/DivideAndScan'
-__version__ = '0.1.9'
+__version__ = '0.2.0'
 
 import time
 from datetime import datetime, timedelta
@@ -30,7 +30,7 @@ class Logger:
 		Constructor.
 
 		:return: class object
-		:rtype: das.modules.common.Logger
+		:rtype: das.common.Logger
 		"""
 		self.timestart = time.localtime()
 

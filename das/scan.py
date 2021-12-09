@@ -12,7 +12,7 @@ from concurrent.futures import ProcessPoolExecutor
 from tinydb import TinyDB, Query
 from netaddr import IPNetwork
 
-from das.modules.common import Logger
+from das.common import Logger
 
 
 class ScanBase:
@@ -29,7 +29,7 @@ class ScanBase:
 		:param ports: a list of ports to interact with ("all" for all the ports in DB)
 		:type ports: list
 		:return: base class object
-		:rtype: das.modules.scan.ScanBase
+		:rtype: das.scan.ScanBase
 		"""
 		self.db = TinyDB(db)
 		self.Host = Query()

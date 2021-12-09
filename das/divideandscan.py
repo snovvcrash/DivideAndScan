@@ -3,13 +3,13 @@
 import os
 import sys
 from pathlib import Path
+from importlib import import_module
 from collections import namedtuple
 from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFormatter
 
-from das.modules.add import AddMasscanOutput, AddRustscanOutput, AddNaabuOutput, AddNimscanOutput, AddNmapOutput
-from das.modules.scan import ScanShow, ScanRun
-from das.modules.report import NmapMerger
-from das.modules.common import BANNER, Logger
+from das.scan import ScanShow, ScanRun
+from das.report import NmapMerger
+from das.common import BANNER, Logger
 
 
 def parse_args():
@@ -33,7 +33,7 @@ def parse_args():
 	  das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-49151 --open'
 	""".replace('\t', '')
 	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan and add the output to DB')
-	add_parser.add_argument('scanner_name', action='store', type=str, choices=['masscan', 'rustscan', 'naabu', 'nimscan', 'nmap'], help='port scanner name')
+	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
 	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options')
 	add_parser.add_argument('-db', action='store', type=str, default='das', help='DB name to save the output into')
 	add_parser.add_argument('-rm', action='store_true', default=False, help='drop the DB before updating its values')
@@ -106,18 +106,13 @@ def main():
 	if args.subparser == 'add':
 		(Path.cwd() / '.db' / 'raw').mkdir(parents=True, exist_ok=True)
 
-		if args.scanner_name == 'masscan':
-			AddPortscanOutput = AddMasscanOutput
-		elif args.scanner_name == 'rustscan':
-			AddPortscanOutput = AddRustscanOutput
-		elif args.scanner_name == 'naabu':
-			AddPortscanOutput = AddNaabuOutput
-		elif args.scanner_name == 'nimscan':
-			AddPortscanOutput = AddNimscanOutput
-		elif args.scanner_name == 'nmap':
-			AddPortscanOutput = AddNmapOutput
-		else:
-			logger.print_error(f'{args.scanner_name}: Unsupported port scanner')
+		try:
+			AddPortscanOutput = import_module(f'das.parsers.{args.scanner_name}', 'AddPortscanOutput').AddPortscanOutput
+		except ModuleNotFoundError:
+			logger.print_error(f"Unsupported port scanner '{args.scanner_name}'")
+			sys.exit(1)
+		except Exception as e:
+			logger.print_error(f"Unknown error while loading '{args.scanner_name}' parser: {str(e)}")
 			sys.exit(1)
 
 		P = Path.cwd() / '.db' / f'{args.db}.json'

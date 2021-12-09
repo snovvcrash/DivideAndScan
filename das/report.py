@@ -11,7 +11,7 @@ from collections import namedtuple
 import defusedxml.ElementTree as ET
 from netaddr import IPNetwork
 
-from das.modules.common import Logger
+from das.common import Logger
 
 
 class NmapMerger:
@@ -28,7 +28,7 @@ class NmapMerger:
 		:param output: dictionary containing output type information and desired output filename
 		:type output: dict
 		:return: class object
-		:rtype: das.modules.report.NmapMerger
+		:rtype: das.report.NmapMerger
 		"""
 		if output:
 			for fmt, name in output.items():

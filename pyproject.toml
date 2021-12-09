@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "divideandscan"
-version = "0.1.9"
+version = "0.2.0"
 description = "Divide full port scan results and use it for targeted Nmap runs"
 authors = ["Sam Freeside <snovvcrash@protonmail.ch>"]
 license = "BSD-2-Clause"
 readme = "README.md"
 homepage = "https://github.com/snovvcrash/DivideAndScan"
 repository = "https://github.com/snovvcrash/DivideAndScan"
-keywords = ["port-scanning", "enumeration", "nmap", "masscan", "rustscan"]
+keywords = ["pentest", "scan", "nmap", "masscan", "rustscan"]
 classifiers = [
 	"Topic :: Security",
 	"Programming Language :: Python :: 3",
