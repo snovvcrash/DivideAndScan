@@ -318,7 +318,7 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 
 ## Bring Your Own Scanner!
 
-You can pair your favourite port scanner with DivideAndScan by implementing a single **parse** method in `das/parsers/DUMMY_SCANNER.py`:
+You can pair your favourite port scanner with DivideAndScan by implementing a single **parse** method for its output in `das/parsers/DUMMY_SCANNER.py` (see [example](/das/parsers/masscan.py) for masscan):
 
 ```python
 from das.parsers import IAddPortscanOutput
