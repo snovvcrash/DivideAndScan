@@ -69,7 +69,7 @@ class NmapMerger:
 				self.nmap_reports = {x for x in P if x.stem.startswith('port')}
 			else:
 				ports = ports.split(',')
-				self.nmap_reports = {x for p in ports for x in P if p == x.stem}
+				self.nmap_reports = {x for p in ports for x in P if f'port{p}' == x.stem}
 
 	def xml_to_html(self, merged_xml):
 		"""
