@@ -2,7 +2,7 @@
 
 # Nmap
 
-apt install nmap sudo xsltproc -y
+apt install nmap sudo xsltproc unzip -y
 nmap --script-updatedb
 
 # Masscan
@@ -35,14 +35,14 @@ mkdir /opt/projectdiscovery
 cd /opt/projectdiscovery
 
 wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
-| grep "browser_download_url.*linux-amd64.tar.gz" \
+| grep "browser_download_url.*linux_amd64.zip" \
 | cut -d: -f2,3 \
 | tr -d \" \
-| wget -qO naabu.tar.gz -i-
+| wget -qO naabu.zip -i-
 
-tar -xzf naabu.tar.gz
-mv naabu-linux-amd64 naabu
-rm naabu.tar.gz README.md LICENSE.md
+unzip naabu.zip
+chmod +x naabu
+rm naabu.zip
 ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 
 # NimScan
