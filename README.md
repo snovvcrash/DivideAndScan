@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.1-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.2-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -92,15 +92,16 @@ sudo mkdir /opt/projectdiscovery
 cd /opt/projectdiscovery
 
 wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
-| grep "browser_download_url.*linux-amd64.tar.gz" \
+| grep "browser_download_url.*linux_amd64.zip" \
 | cut -d: -f2,3 \
 | tr -d \" \
-| sudo wget -qO naabu.tar.gz -i-
+| sudo wget -qO naabu.zip -i-
 
-sudo tar -xvzf naabu.tar.gz
-sudo mv naabu-linux-amd64 naabu
-sudo rm naabu.tar.gz README.md LICENSE.md
-sudo ln -vs /opt/projectdiscovery/naabu /usr/local/bin/naabu
+sudo unzip naabu.zip
+sudo chmod +x naabu
+cd && sudo rm /opt/projectdiscovery/naabu.zip
+
+sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 ```
 
 #### NimScan
@@ -116,6 +117,8 @@ wget -qO- https://api.github.com/repos/elddy/NimScan/releases/latest \
 | sudo wget -qO nimscan -i-
 
 sudo chmod +x nimscan
+cd
+
 sudo ln -s /opt/nimscan/nimscan /usr/local/bin/nimscan
 ```
 
