@@ -38,6 +38,8 @@ Potential use cases:
 * [NimScan](https://github.com/elddy/NimScan)
 * [Nmap](https://github.com/nmap/nmap)
 
+> **DISCLAIMER.** All information contained in this repository is provided for educational and research purposes only. The author is not responsible for any illegal use of this tool.
+
 ## How It Works
 
 ![how-it-works.png](https://user-images.githubusercontent.com/23141800/113610892-67566080-9656-11eb-8520-8fa2dcaf3463.png)
