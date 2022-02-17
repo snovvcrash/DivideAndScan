@@ -30,7 +30,6 @@ netaddr = "^0.8.0"
 defusedxml = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^4.0.1"
 pylint = "^2.12.2"
 twine = "^3.8.0"
 
