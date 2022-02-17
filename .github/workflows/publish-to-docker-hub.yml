@@ -9,7 +9,7 @@ on:
 jobs:
   push-to-registry:
     name: Publish Docker image to Docker Hub
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Check out the repo
