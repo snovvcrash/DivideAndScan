@@ -12,12 +12,12 @@ from das.common import Logger
 class IAddPortscanOutput(ABC):
 	"""Base class for updating DB with parsed portscan output."""
 
-	def __init__(self, db, rm, scanner_name, scanner_args):
+	def __init__(self, db_path, rm, scanner_name, scanner_args):
 		"""
 		Constructor.
 
-		:param db: a tinydb database file path
-		:type db: tinydb.TinyDB
+		:param db_path: a TinyDB database file path
+		:type db_path: tinydb.TinyDB
 		:param rm: a flag showing if we need to drop the DB before updating its values
 		:type rm: bool
 		:param scanner_name: name of the port scanner to run
@@ -27,7 +27,7 @@ class IAddPortscanOutput(ABC):
 		:return: base class object
 		:rtype: das.parsers.IAddPortscanOutput
 		"""
-		self.db = TinyDB(db)
+		self.db = TinyDB(db_path)
 		if rm:
 			self.db.truncate()
 

@@ -35,7 +35,7 @@ def parse_args():
 	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan and add the output to DB')
 	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
 	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options')
-	add_parser.add_argument('-db', action='store', type=str, default='das', help='DB name to save the output into')
+	add_parser.add_argument('-db', action='store', type=str, default='main', help='DB name to save the output into')
 	add_parser.add_argument('-rm', action='store_true', default=False, help='drop the DB before updating its values')
 
 	scan_epilog = """
@@ -47,7 +47,7 @@ def parse_args():
 	  das scan -db testdb -ports ports.txt -oA report2 -parallel -proc 4
 	""".replace('\t', '')
 	scan_parser = subparser.add_parser('scan', formatter_class=RawDescriptionHelpFormatter, epilog=scan_epilog, help='run targeted Nmap scans against hosts and ports from DB')
-	scan_parser.add_argument('-db', action='store', type=str, default='das', help='DB name to retrieve the input from')
+	scan_parser.add_argument('-db', action='store', type=str, default='main', help='DB name to retrieve the input from')
 	scan_parser.add_argument('-nmap', action='store', type=str, default=None, help='custom Nmap options, so the final command will be "sudo nmap <OPTIONS> -oA scan/$output $ip -p$ports" (default is "sudo nmap -Pn -sV --version-intensity 6 -O -oA scan/$output $ip -p$ports")')
 	group_parallel = scan_parser.add_argument_group('parallelism')
 	group_parallel.add_argument('-parallel', action='store_true', default=False, help='run Nmap in multiple processes, number of processes is set with -p (-processes) argument')
@@ -131,7 +131,7 @@ def main():
 		logger.print_success(f'Successfully updated DB with {num_of_hosts} hosts')
 
 	elif args.subparser == 'scan':
-		(Path.cwd() / '.nmap').mkdir(exist_ok=True)
+		(Path.cwd() / f'.nmap_{args.db}').mkdir(exist_ok=True)
 
 		output = {'oA': args.oA, 'oX': args.oX, 'oN': args.oN, 'oG': args.oG}
 
@@ -156,18 +156,18 @@ def main():
 			elif args.ports:
 				sr.nmap_by_ports(args.nmap, parallel)
 
-			nm = NmapMerger(args.hosts, args.ports, output)
+			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
 
 	elif args.subparser == 'report':
 		output = {'oA': args.oA, 'oX': args.oX, 'oN': args.oN, 'oG': args.oG}
 
 		if args.show:
-			nm = NmapMerger(args.hosts, args.ports)
+			nm = NmapMerger(args.db, args.hosts, args.ports)
 			nm.show()
 
 		elif any(o for o in output.values()):
-			nm = NmapMerger(args.hosts, args.ports, output)
+			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
 
 	elif args.subparser == 'help':

@@ -18,12 +18,12 @@ from das.common import Logger
 class ScanBase:
 	"""Base class for searching DB and/or initiating Nmap scans."""
 
-	def __init__(self, db, hosts, ports):
+	def __init__(self, db_path, hosts, ports):
 		"""
 		Constructor.
 
-		:param db: a tinydb database file path
-		:type db: tinydb.TinyDB
+		:param db_path: a TinyDB database file path
+		:type db_path: tinydb.TinyDB
 		:param hosts: a list of hosts to interact with ("all" for all the hosts in DB)
 		:type hosts: list
 		:param ports: a list of ports to interact with ("all" for all the ports in DB)
@@ -31,7 +31,8 @@ class ScanBase:
 		:return: base class object
 		:rtype: das.scan.ScanBase
 		"""
-		self.db = TinyDB(db)
+		self.db_name = Path(db_path).stem
+		self.db = TinyDB(db_path)
 		self.Host = Query()
 		self.total_scans = 0
 
@@ -127,9 +128,9 @@ class ScanRun(ScanBase):
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
 
 			if nmap_opts is None:
-				cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA .nmap/{nmap_out} {ip} -p{sorted_ports}"""
+				cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA .nmap_{self.db_name}/{nmap_out} {ip} -p{sorted_ports}"""
 			else:
-				cmd = f"""sudo nmap {nmap_opts} -oA .nmap/{nmap_out} {ip} -p{sorted_ports}"""
+				cmd = f"""sudo nmap {nmap_opts} -oA .nmap_{self.db_name}/{nmap_out} {ip} -p{sorted_ports}"""
 
 			if parallel.enabled:
 				cmd += ' > /dev/null 2>&1'
@@ -164,9 +165,9 @@ class ScanRun(ScanBase):
 				tmp.seek(0)
 
 				if nmap_opts is None:
-					cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA .nmap/{nmap_out} -iL {tmp.name} -p{port}"""
+					cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA .nmap_{self.db_name}/{nmap_out} -iL {tmp.name} -p{port}"""
 				else:
-					cmd = f"""sudo nmap {nmap_opts} -oA .nmap/{nmap_out} -iL {tmp.name} -p{port}"""
+					cmd = f"""sudo nmap {nmap_opts} -oA .nmap_{self.db_name}/{nmap_out} -iL {tmp.name} -p{port}"""
 
 				sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
 				Logger.print_cmd(f'{tmp.name}: {sorted_ip_list}')

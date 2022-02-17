@@ -17,10 +17,11 @@ from das.common import Logger
 class NmapMerger:
 	"""Class for merging separate Nmap outputs into a single report in different formats."""
 
-	def __init__(self, hosts, ports, output=None):
+	def __init__(self, db_name, hosts, ports, output=None):
 		"""
 		Constructor.
 
+		:param db_name: database name
 		:param hosts: list of Nmap reports with host-like filenames to merge ("all" for all the reports in Nmap directory with host-like filenames)
 		:type hosts: list
 		:param ports: list of Nmap reports with port-like filenames to merge ("all" for all the reports in Nmap directory with port-like filenames)
@@ -38,7 +39,9 @@ class NmapMerger:
 		else:
 			self.output = None
 
-		P = (Path.cwd() / '.nmap').glob('*.*')
+		self.db_name = db_name
+
+		P = (Path.cwd() / f'.nmap_{self.db_name}').glob('*.*')
 		P = list(P)
 
 		if hosts:
