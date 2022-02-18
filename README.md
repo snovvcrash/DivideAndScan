@@ -55,7 +55,7 @@ To successfully *divide and scan* we need to get some good port scanning tools.
 #### Nmap
 
 ```bash
-sudo apt install nmap sudo xsltproc -y
+sudo apt install nmap xsltproc -y
 sudo nmap --script-updatedb
 ```
 
@@ -203,7 +203,7 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 ```
 
-When the module completes its work, a hidden directory `.db` is created in CWD containig the database file and raw scan results.
+When the module completes its work, a directory `~/.das/db` is created in CWD containig the database file and raw scan results.
 
 </td>
 </tr>
@@ -234,7 +234,7 @@ To start Nmap simultaneously in multiple processes, specify the `-parallel` swit
 ~$ das scan -hosts all -oA report -parallel [-proc 4]
 ```
 
-The output format is selected with `-oX`, `-oN`, `-oG` and `-oA` options for XML+HTML formats, simple text format, grepable format and all formats respectively. When the module completes its work, a hidden directory `.nmap_<DB_NAME>` is created in CWD containig Nmap raw scan reports.
+The output format is selected with `-oX`, `-oN`, `-oG` and `-oA` options for XML+HTML formats, simple text format, grepable format and all formats respectively. When the module completes its work, a directory `~/.das/nmap_<DB_NAME>` is created in CWD containig Nmap raw scan reports.
 
 Also, you can inspect the contents of the database with `-show` option before actually launching the scans:
 
@@ -252,7 +252,7 @@ Also, you can inspect the contents of the database with `-show` option before ac
 <tr>
 <td>
 
-In order to generate a report independently of the `scan` module, you should use the `report` module. It will search for Nmap raw scan reports in the `.nmap_<DB_NAME>` directory and process and merge them based on either `-hosts` or `-ports` option:
+In order to generate a report independently of the `scan` module, you should use the `report` module. It will search for Nmap raw scan reports in the `~/.das/nmap_<DB_NAME>` directory and process and merge them based on either `-hosts` or `-ports` option:
 
 ```console
 # Merge outputs by hosts
@@ -265,7 +265,7 @@ In order to generate a report independently of the `scan` module, you should use
 ~$ das report -ports ports.txt -oA report2
 ```
 
-📑 **Note:** keep in mind that the `report` module does **not** search the DB when processing the `-hosts` or `-ports` options, but looks for Nmap raw reports directly in `.nmap_<DB_NAME>` directory instead; it means that `-hosts 127.0.0.1` argument value will be successfully resolved only if `.nmap_<DB_NAME>/127-0-0-1.*` files exist, and `-ports 80` argument value will be successfully resolved only if `.nmap_<DB_NAME>/port80.*` files exist.
+📑 **Note:** keep in mind that the `report` module does **not** search the DB when processing the `-hosts` or `-ports` options, but looks for Nmap raw reports directly in `~/.das/nmap_<DB_NAME>` directory instead; it means that `-hosts 127.0.0.1` argument value will be successfully resolved only if `~/.das/nmap_<DB_NAME>/127-0-0-1.*` files exist, and `-ports 80` argument value will be successfully resolved only if `~/.das/nmap_<DB_NAME>/port80.*` files exist.
 
 </td>
 </tr>

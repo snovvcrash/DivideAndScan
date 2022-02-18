@@ -128,9 +128,9 @@ class ScanRun(ScanBase):
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
 
 			if nmap_opts is None:
-				cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA .nmap_{self.db_name}/{nmap_out} {ip} -p{sorted_ports}"""
+				cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA {Path.home()}/.das/nmap_{self.db_name}/{nmap_out} {ip} -p{sorted_ports}"""
 			else:
-				cmd = f"""sudo nmap {nmap_opts} -oA .nmap_{self.db_name}/{nmap_out} {ip} -p{sorted_ports}"""
+				cmd = f"""sudo nmap {nmap_opts} -oA {Path.home()}/.das/nmap_{self.db_name}/{nmap_out} {ip} -p{sorted_ports}"""
 
 			if parallel.enabled:
 				cmd += ' > /dev/null 2>&1'
@@ -165,9 +165,9 @@ class ScanRun(ScanBase):
 				tmp.seek(0)
 
 				if nmap_opts is None:
-					cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA .nmap_{self.db_name}/{nmap_out} -iL {tmp.name} -p{port}"""
+					cmd = f"""sudo nmap -Pn -sV --version-intensity 6 -O -oA {Path.home()}/.das/nmap_{self.db_name}/{nmap_out} -iL {tmp.name} -p{port}"""
 				else:
-					cmd = f"""sudo nmap {nmap_opts} -oA .nmap_{self.db_name}/{nmap_out} -iL {tmp.name} -p{port}"""
+					cmd = f"""sudo nmap {nmap_opts} -oA {Path.home()}/.das/nmap_{self.db_name}/{nmap_out} -iL {tmp.name} -p{port}"""
 
 				sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
 				Logger.print_cmd(f'{tmp.name}: {sorted_ip_list}')

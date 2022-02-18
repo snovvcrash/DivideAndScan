@@ -104,7 +104,7 @@ def main():
 		logger.start_timer()
 
 	if args.subparser == 'add':
-		(Path.cwd() / '.db' / 'raw').mkdir(parents=True, exist_ok=True)
+		(Path.home() / '.das' / 'db' / 'raw').mkdir(parents=True, exist_ok=True)
 
 		scanner_name = Path(args.scanner_name).name
 		try:
@@ -116,7 +116,7 @@ def main():
 			logger.print_error(f"Unknown error while loading '{scanner_name}' parser: {str(e)}")
 			sys.exit(1)
 
-		P = Path.cwd() / '.db' / f'{args.db}.json'
+		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
 
 		apo = AddPortscanOutput(str(P), args.rm, scanner_name, args.scanner_args)
 		portscan_out, num_of_hosts = apo.parse()
@@ -124,18 +124,18 @@ def main():
 		if P.exists():
 			logger.print_info(f'Using DB -> {P.resolve()}')
 
-		P = Path.cwd() / portscan_out
+		P = Path.home() / '.das' / portscan_out
 		if P.exists():
 			logger.print_info(f'Raw port scanner output -> {P.resolve()}')
 
 		logger.print_success(f'Successfully updated DB with {num_of_hosts} hosts')
 
 	elif args.subparser == 'scan':
-		(Path.cwd() / f'.nmap_{args.db}').mkdir(exist_ok=True)
+		(Path.home() / '.das' / f'nmap_{args.db}').mkdir(parents=True, exist_ok=True)
 
 		output = {'oA': args.oA, 'oX': args.oX, 'oN': args.oN, 'oG': args.oG}
 
-		P = Path.cwd() / '.db' / f'{args.db}.json'
+		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
 		if P.exists():
 			logger.print_info(f'Using DB -> {P.resolve()}')
 

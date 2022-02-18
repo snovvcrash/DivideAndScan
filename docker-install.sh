@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+apt install sudo unzip
+
 # Nmap
 
-apt install nmap sudo xsltproc unzip -y
+apt install nmap xsltproc -y
 nmap --script-updatedb
 
 # Masscan

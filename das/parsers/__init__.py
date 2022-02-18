@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 from datetime import datetime
 from abc import ABC, abstractmethod
 
@@ -31,7 +32,7 @@ class IAddPortscanOutput(ABC):
 		if rm:
 			self.db.truncate()
 
-		self.portscan_out = f'.db/raw/{scanner_name}-{datetime.now().strftime("%Y%m%dT%H%M%S")}.out'
+		self.portscan_out = f'{Path.home()}/.das/db/raw/{scanner_name}-{datetime.now().strftime("%Y%m%dT%H%M%S")}.out'
 		self.command = f"""sudo {scanner_name} {scanner_args} | tee {self.portscan_out}"""
 
 		Logger.print_cmd(self.command)

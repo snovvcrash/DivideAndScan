@@ -41,7 +41,7 @@ class NmapMerger:
 
 		self.db_name = db_name
 
-		P = (Path.cwd() / f'.nmap_{self.db_name}').glob('*.*')
+		P = (Path.home() / '.das' / f'nmap_{self.db_name}').glob('*.*')
 		P = list(P)
 
 		if hosts:
@@ -205,7 +205,7 @@ class NmapMerger:
 		nmap_header += '<!DOCTYPE nmaprun>'
 		nmap_header += '<?xml-stylesheet href="file:///usr/share/nmap/nmap.xsl" type="text/xsl"?>'
 		nmap_header += '<!-- Nmap scan initiated by DivideAndScan: https://github.com/snovvcrash/DivideAndScan -->'
-		nmap_header += '<!-- Nmap reports merged with nMapMerge.py: https://github.com/CBHue/nMap_Merger -->'
+		nmap_header += '<!-- Nmap reports merged with nMap_Merger: https://github.com/CBHue/nMap_Merger -->'
 		nmap_header += f'''<nmaprun scanner="{d['scanner']}" args="(Example) {d['args']}" start="0" startstr="Thu Jan  1 00:00:00 1970" version="{d['version']}" xmloutputversion="{d['xmloutputversion']}">'''
 		nmap_header += f'''<scaninfo type="{d['type']}" protocol="{d['protocol']}" numservices="0" services="0"/>'''
 		nmap_header += '<verbose level="0"/>'
