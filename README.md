@@ -163,23 +163,6 @@ Since the tool requires some input data and produces some output data, you shoul
 
 ![how-to-use.png](https://user-images.githubusercontent.com/23141800/113610915-6fae9b80-9656-11eb-8b1a-db503dd43861.png)
 
-### 0. Preparations
-
-<table>
-<tr>
-<td>
-
-Make a new directory to start DivideAndScan from. The tool will create subdirectories in CWD to store the output, so I recommend launching it from a clean directory to stay organized:
-
-```console
-~$ mkdir divideandscan
-~$ cd divideandscan
-```
-
-</td>
-</tr>
-</table>
-
 ### 1. Filling the DB
 
 <table>
@@ -203,7 +186,7 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 ```
 
-When the module completes its work, a directory `~/.das/db` is created in CWD containig the database file and raw scan results.
+When the module starts its work, a directory `~/.das/db` is created where the database file and raw scan results will be put when the module routine finishes.
 
 </td>
 </tr>
@@ -234,7 +217,7 @@ To start Nmap simultaneously in multiple processes, specify the `-parallel` swit
 ~$ das scan -hosts all -oA report -parallel [-proc 4]
 ```
 
-The output format is selected with `-oX`, `-oN`, `-oG` and `-oA` options for XML+HTML formats, simple text format, grepable format and all formats respectively. When the module completes its work, a directory `~/.das/nmap_<DB_NAME>` is created in CWD containig Nmap raw scan reports.
+The output format is selected with `-oX`, `-oN`, `-oG` and `-oA` options for XML+HTML formats, simple text format, grepable format and all formats respectively. When the module completes its work, a directory `~/.das/nmap_<DB_NAME>` is created containig Nmap raw scan reports.
 
 Also, you can inspect the contents of the database with `-show` option before actually launching the scans:
 
