@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-apt install sudo unzip
-
 # Nmap
 
 apt install nmap xsltproc -y
@@ -10,17 +8,17 @@ nmap --script-updatedb
 # Masscan
 
 cd /tmp
-git clone https://github.com/robertdavidgraham/masscan.git
-cd masscan
+wget https://github.com/robertdavidgraham/masscan/archive/refs/heads/master.zip -O masscan-master.zip
+cd masscan-master
 make
 make install
-cd && rm -rf /tmp/masscan
+cd && rm -rf /tmp/masscan-master*
 
 # RustScan
 
 cd /tmp
 
-wget -qO- https://api.github.com/repos/RustScan/RustScan/releases/latest \
+wget https://api.github.com/repos/RustScan/RustScan/releases/latest -qO- \
 | grep "browser_download_url.*amd64.deb" \
 | cut -d: -f2,3 \
 | tr -d \" \
@@ -36,7 +34,7 @@ wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/raw/fe8
 mkdir /opt/projectdiscovery
 cd /opt/projectdiscovery
 
-wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
+wget https://api.github.com/repos/projectdiscovery/naabu/releases/latest -qO- \
 | grep "browser_download_url.*linux_amd64.zip" \
 | cut -d: -f2,3 \
 | tr -d \" \
@@ -52,7 +50,7 @@ ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 mkdir /opt/nimscan
 cd /opt/nimscan
 
-wget -qO- https://api.github.com/repos/elddy/NimScan/releases/latest \
+wget https://api.github.com/repos/elddy/NimScan/releases/latest -qO- \
 | grep 'browser_download_url.*NimScan"' \
 | cut -d: -f2,3 \
 | tr -d \" \

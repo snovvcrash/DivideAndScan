@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.4-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.5-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -63,11 +63,11 @@ sudo nmap --script-updatedb
 
 ```bash
 cd /tmp
-git clone https://github.com/robertdavidgraham/masscan.git
-cd masscan
+wget https://github.com/robertdavidgraham/masscan/archive/refs/heads/master.zip -O masscan-master.zip
+cd masscan-master
 make
 sudo make install
-cd && rm -rf /tmp/masscan
+cd && rm -rf /tmp/masscan-master*
 ```
 
 #### RustScan
@@ -75,7 +75,7 @@ cd && rm -rf /tmp/masscan
 ```bash
 cd /tmp
 
-wget -qO- https://api.github.com/repos/RustScan/RustScan/releases/latest \
+wget https://api.github.com/repos/RustScan/RustScan/releases/latest -qO- \
 | grep "browser_download_url.*amd64.deb" \
 | cut -d: -f2,3 \
 | tr -d \" \
@@ -93,7 +93,7 @@ sudo wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/ra
 sudo mkdir /opt/projectdiscovery
 cd /opt/projectdiscovery
 
-wget -qO- https://api.github.com/repos/projectdiscovery/naabu/releases/latest \
+wget https://api.github.com/repos/projectdiscovery/naabu/releases/latest -qO- \
 | grep "browser_download_url.*linux_amd64.zip" \
 | cut -d: -f2,3 \
 | tr -d \" \
@@ -112,7 +112,7 @@ sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 sudo mkdir /opt/nimscan
 cd /opt/nimscan
 
-wget -qO- https://api.github.com/repos/elddy/NimScan/releases/latest \
+wget https://api.github.com/repos/elddy/NimScan/releases/latest -qO- \
 | grep 'browser_download_url.*NimScan"' \
 | cut -d: -f2,3 \
 | tr -d \" \
