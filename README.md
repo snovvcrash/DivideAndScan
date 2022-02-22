@@ -64,6 +64,7 @@ sudo nmap --script-updatedb
 ```bash
 cd /tmp
 wget https://github.com/robertdavidgraham/masscan/archive/refs/heads/master.zip -O masscan-master.zip
+unzip masscan-master.zip
 cd masscan-master
 make
 sudo make install
@@ -91,17 +92,18 @@ sudo wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/ra
 
 ```bash
 sudo mkdir /opt/projectdiscovery
+sudo chown $USER:$USER /opt/projectdiscovery
 cd /opt/projectdiscovery
 
 wget https://api.github.com/repos/projectdiscovery/naabu/releases/latest -qO- \
 | grep "browser_download_url.*linux_amd64.zip" \
 | cut -d: -f2,3 \
 | tr -d \" \
-| sudo wget -qO naabu.zip -i-
+| wget -qO naabu.zip -i-
 
-sudo unzip naabu.zip
-sudo chmod +x naabu
-cd && sudo rm /opt/projectdiscovery/naabu.zip
+unzip naabu.zip
+chmod +x naabu
+cd && rm /opt/projectdiscovery/naabu.zip
 
 sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 ```
@@ -110,15 +112,16 @@ sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
 
 ```bash
 sudo mkdir /opt/nimscan
+sudo chown $USER:$USER /opt/nimscan
 cd /opt/nimscan
 
 wget https://api.github.com/repos/elddy/NimScan/releases/latest -qO- \
 | grep 'browser_download_url.*NimScan"' \
 | cut -d: -f2,3 \
 | tr -d \" \
-| sudo wget -qO nimscan -i-
+| wget -qO nimscan -i-
 
-sudo chmod +x nimscan
+chmod +x nimscan
 cd
 
 sudo ln -s /opt/nimscan/nimscan /usr/local/bin/nimscan
@@ -149,13 +152,13 @@ For debbugging purposes you can set up a dev environment with [poetry](https://g
 You can run DivideAndScan in a Docker container as follows:
 
 ```console
-~$ docker run -it --rm --name das -v `pwd`:/app snovvcrash/divideandscan
+~$ docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app snovvcrash/divideandscan
 ```
 
 Since the tool requires some input data and produces some output data, you should specify your current working directory as the mount point at `/app` within the container. You may want to set an alias to make the base command shorter:
 
 ```console
-~$ alias das='docker run -it --rm --name das -v `pwd`:/app snovvcrash/divideandscan'
+~$ alias das='docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app snovvcrash/divideandscan'
 ~$ das
 ```
 

@@ -9,6 +9,7 @@ nmap --script-updatedb
 
 cd /tmp
 wget https://github.com/robertdavidgraham/masscan/archive/refs/heads/master.zip -O masscan-master.zip
+unzip masscan-master.zip
 cd masscan-master
 make
 make install
