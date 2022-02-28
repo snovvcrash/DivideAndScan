@@ -32,11 +32,11 @@ Potential use cases:
 
 \* Available port scanners:
 
+* [Nmap](https://github.com/nmap/nmap)
 * [Masscan](https://github.com/robertdavidgraham/masscan)
 * [RustScan](https://github.com/RustScan/RustScan)
 * [Naabu](https://github.com/projectdiscovery/naabu)
 * [NimScan](https://github.com/elddy/NimScan)
-* [Nmap](https://github.com/nmap/nmap)
 
 > **DISCLAIMER.** All information contained in this repository is provided for educational and research purposes only. The author is not responsible for any illegal use of this tool.
 
