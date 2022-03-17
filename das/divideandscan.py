@@ -20,6 +20,7 @@ def parse_args():
 	:rtype: argparse.ArgumentParser.Namespace
 	"""
 	parser = ArgumentParser(description=BANNER, formatter_class=RawTextHelpFormatter, epilog='Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?')
+	parser.add_argument('-db', action='store', type=str, default='main', help='DB name to work with')
 
 	subparser = parser.add_subparsers(dest='subparser')
 
@@ -28,27 +29,27 @@ def parse_args():
 
 	  das add masscan '-e eth0 --rate 1000 -iL hosts.txt -p1-65535 --open'
 	  das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config --scan-order "Random"'
-	  das add -db testdb naabu '-interface eth0 -rate 1000 -iL hosts.txt -p - -silent -s s'
-	  das add -db testdb -rm nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
+	  das -db testdb add naabu '-interface eth0 -rate 1000 -iL hosts.txt -p - -silent -s s'
+	  das -db testdb add -rm nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 	  das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-49151 --open'
 	""".replace('\t', '')
 	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan and add the output to DB')
 	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
 	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options')
-	add_parser.add_argument('-db', action='store', type=str, default='main', help='DB name to save the output into')
 	add_parser.add_argument('-rm', action='store_true', default=False, help='drop the DB before updating its values')
 
 	scan_epilog = """
 	examples:
 
 	  das scan -hosts all -show
+	  das scan -ports 22 -show -raw
 	  das scan -hosts 192.168.1.0/24,10.10.13.37 -oA report1 -nmap '-Pn -sVC -O'
-	  das scan -db testdb -ports 22,80,443,445 -oA report2 -parallel
-	  das scan -db testdb -ports ports.txt -oA report2 -parallel -proc 4
+	  das -db testdb scan -ports 22,80,443,445 -oA report2 -parallel
+	  das -db testdb scan -ports ports.txt -oA report2 -parallel -proc 4
 	""".replace('\t', '')
 	scan_parser = subparser.add_parser('scan', formatter_class=RawDescriptionHelpFormatter, epilog=scan_epilog, help='run targeted Nmap scans against hosts and ports from DB')
-	scan_parser.add_argument('-db', action='store', type=str, default='main', help='DB name to retrieve the input from')
 	scan_parser.add_argument('-nmap', action='store', type=str, default=None, help='custom Nmap options, so the final command will be "sudo nmap <OPTIONS> -oA scan/$output $ip -p$ports" (default is "sudo nmap -Pn -sV --version-intensity 6 -O -oA scan/$output $ip -p$ports")')
+	scan_parser.add_argument('-raw', action='store_true', default=False, help='when -show is used, print the results in a raw list (no decorations)')
 	group_parallel = scan_parser.add_argument_group('parallelism')
 	group_parallel.add_argument('-parallel', action='store_true', default=False, help='run Nmap in multiple processes, number of processes is set with -p (-processes) argument')
 	group_parallel.add_argument('-proc', action='store', type=int, default=None, help='number of parallel Nmap processes (if no value is provided, it will default to the number of processors on the machine)')
@@ -81,6 +82,8 @@ def parse_args():
 	group_criteria.add_argument('-hosts', action='store', type=str, help='hosts to add to report by IP (a comma-separated string of IPs and/or CIDRs or a filename; "all" for all host reports in Nmap directory)')
 	group_criteria.add_argument('-ports', action='store', type=str, help='hosts to add to report by port (a comma-separated string of ports or a filename; "all" for all port reports in Nmap directory)')
 
+	tree_parser = subparser.add_parser('tree', help='show contents of the ~/.das directory using tree')
+
 	helper_parser = subparser.add_parser('help', help='show builtin --help dialog of a selected port scanner')
 	helper_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
 
@@ -94,7 +97,7 @@ def main():
 	args = parse_args()
 
 	if len(sys.argv) == 1:
-		print('usage: __main__.py [-h] {add,scan,report} ...\n')
+		print('usage: __main__.py [-h] {add,scan,report,tree,help} ...\n')
 		print(BANNER)
 		sys.exit(0)
 
@@ -131,16 +134,17 @@ def main():
 		logger.print_success(f'Successfully updated DB with {num_of_hosts} hosts')
 
 	elif args.subparser == 'scan':
-		(Path.home() / '.das' / f'nmap_{args.db}').mkdir(parents=True, exist_ok=True)
+		if not args.show:
+			(Path.home() / '.das' / f'nmap_{args.db}').mkdir(parents=True, exist_ok=True)
 
 		output = {'oA': args.oA, 'oX': args.oX, 'oN': args.oN, 'oG': args.oG}
 
 		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
-		if P.exists():
+		if P.exists() and not args.raw:
 			logger.print_info(f'Using DB -> {P.resolve()}')
 
 		if args.show:
-			ss = ScanShow(str(P), args.hosts, args.ports)
+			ss = ScanShow(str(P), args.hosts, args.ports, args.raw)
 			if args.hosts:
 				ss.nmap_by_hosts()
 			elif args.ports:
@@ -169,6 +173,9 @@ def main():
 		elif any(o for o in output.values()):
 			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
+
+	elif args.subparser == 'tree':
+		os.system(f'tree {Path.home() / ".das"}')
 
 	elif args.subparser == 'help':
 		os.system(f'{args.scanner_name} --help')

@@ -18,7 +18,7 @@ from das.common import Logger
 class ScanBase:
 	"""Base class for searching DB and/or initiating Nmap scans."""
 
-	def __init__(self, db_path, hosts, ports):
+	def __init__(self, db_path, hosts, ports, raw_output=False):
 		"""
 		Constructor.
 
@@ -78,7 +78,9 @@ class ScanBase:
 
 			self.total_scans += len(self.port_dict)
 
-		Logger.print_info(f'Total scans -> {self.total_scans}')
+		self.raw_output = raw_output
+		if not self.raw_output:
+			Logger.print_info(f'Total scans -> {self.total_scans}')
 
 	@abstractmethod
 	def nmap_by_hosts(self):
@@ -98,13 +100,19 @@ class ScanShow(ScanBase):
 		"""Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched."""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
-			Logger.print_success(f'IP {ip} ({len(ports)}) -> [{sorted_ports}]')
+			if self.raw_output:
+				print(sorted_ports)
+			else:
+				Logger.print_success(f'IP {ip} ({len(ports)}) -> [{sorted_ports}]')
 
 	def nmap_by_ports(self):
 		"""Search DB by ports and print mapping "open_port -> [live_hosts]". No Nmap scan is launched."""
 		for port, ip_list in sorted(self.port_dict.items()):
 			sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
-			Logger.print_success(f'Port {port} ({len(ip_list)}) -> [{sorted_ip_list}]')
+			if self.raw_output:
+				print(sorted_ip_list.replace(',', '\n'))
+			else:
+				Logger.print_success(f'Port {port} ({len(ip_list)}) -> [{sorted_ip_list}]')
 
 
 class ScanRun(ScanBase):

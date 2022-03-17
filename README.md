@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.5-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.6-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -265,7 +265,7 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 1. Add mappings "host ⇄ open ports" to the database with Masscan. For demonstration purposes I will exclude dynamic port range to avoid unnecessary stuff by using `-p1-49151`. On the second screenshot I'm reviewing scan results by hosts and by ports:
 
 ```console
-~$ das add -db htb -rm masscan '-e tun0 --rate 1000 -iL hosts.txt -p1-49151 --open'
+~$ das -db htb add -rm masscan '-e tun0 --rate 1000 -iL hosts.txt -p1-49151 --open'
 ```
 
 <p align="center">
@@ -273,8 +273,8 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 </p>
 
 ```console
-~$ das scan -db htb -hosts all -show
-~$ das scan -db htb -ports all -show
+~$ das -db htb scan -hosts all -show
+~$ das -db htb scan -ports all -show
 ```
 
 <p align="center">
@@ -284,7 +284,7 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 2. Launch Nmap processes for each target to enumerate only ports that we're interested in (the open ports). On the second screenshot I'm doing the same but starting Nmap processes simultaneously:
 
 ```console
-~$ das scan -db htb -hosts all -oA report
+~$ das -db htb scan -hosts all -oA report
 ```
 
 <p align="center">
@@ -292,7 +292,7 @@ Let's enumerate open ports for all live machines on [Hack The Box](https://www.h
 </p>
 
 ```console
-~$ das scan -db htb -hosts all -oA report -nmap '-Pn -sVC -O' -parallel
+~$ das -db htb scan -hosts all -oA report -nmap '-Pn -sVC -O' -parallel
 ```
 
 <p align="center">
@@ -367,6 +367,7 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 * [x] <strike>Add [elddy/NimScan](https://github.com/elddy/NimScan) parser</strike>
 * [ ] Add [ZMap](https://github.com/zmap/zmap) parser
 * [ ] Add armada (?) parser
+* [ ] Store hostnames (if there're any) next to their IP values
 
 ## Support
 
