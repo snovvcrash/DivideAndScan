@@ -336,7 +336,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 ## Help
 
 ```
-usage: das [-h] {add,scan,report,help} ...
+usage: das [-h] [-db DB] {add,scan,report,tree,help} ...
 
  -----------------------------------------------------------------------------------------------
 |  ________  .__      .__    .___        _____              .____________                       |
@@ -349,14 +349,16 @@ usage: das [-h] {add,scan,report,help} ...
  -----------------------------------------------------------------------------------------------
 
 positional arguments:
-  {add,scan,report,help}
+  {add,scan,report,tree,help}
     add                 run a full port scan and add the output to DB
     scan                run targeted Nmap scans against hosts and ports from DB
     report              merge separate Nmap outputs into a single report in different formats
+    tree                show contents of the ~/.das directory using tree
     help                show builtin --help dialog of a selected port scanner
 
 optional arguments:
   -h, --help            show this help message and exit
+  -db DB                DB name to work with
 
 Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 ```
