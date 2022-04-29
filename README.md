@@ -149,6 +149,8 @@ For debbugging purposes you can set up a dev environment with [poetry](https://g
 
 ### Using from Docker
 
+[![dockeri.co](https://dockeri.co/image/snovvcrash/divideandscan)](https://hub.docker.com/r/snovvcrash/divideandscan)
+
 You can run DivideAndScan in a Docker container as follows:
 
 ```console
