@@ -369,6 +369,7 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 
 * [x] <strike>Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser</strike>
 * [x] <strike>Add [elddy/NimScan](https://github.com/elddy/NimScan) parser</strike>
+* [ ] Add [sx](https://github.com/v-byte-cpu/sx) parser
 * [ ] Add [ZMap](https://github.com/zmap/zmap) parser
 * [ ] Add armada (?) parser
 * [ ] Store hostnames (if there're any) next to their IP values
