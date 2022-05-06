@@ -38,8 +38,11 @@ class IAddPortscanOutput(ABC):
 		Logger.print_cmd(self.command)
 		os.system(self.command)
 
-		with open(self.portscan_out, 'r', encoding='utf-8') as fd:
-			self.portscan_raw = fd.read().splitlines()
+		with open(self.portscan_out, 'r+', encoding='utf-8') as fd:
+			content = fd.read()
+			fd.seek(0)
+			fd.write(f'# {self.command}\n\n{content}')
+			self.portscan_raw = content.splitlines()
 
 	@abstractmethod
 	def parse(self):
