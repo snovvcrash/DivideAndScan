@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.6-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.7-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -36,6 +36,7 @@ Potential use cases:
 * [Masscan](https://github.com/robertdavidgraham/masscan)
 * [RustScan](https://github.com/RustScan/RustScan)
 * [Naabu](https://github.com/projectdiscovery/naabu)
+* [sx](https://github.com/v-byte-cpu/sx)
 * [NimScan](https://github.com/elddy/NimScan)
 
 > **DISCLAIMER.** All information contained in this repository is provided for educational and research purposes only. The author is not responsible for any illegal use of this tool.
@@ -48,7 +49,7 @@ Potential use cases:
 
 ### Prerequisites
 
-To successfully *divide and scan* we need to get some good port scanning tools.
+To successfully *divide and scan* we need to get some good port scanning tools (in the examples below GitHub releases are grabbed via [eget](https://github.com/zyedidia/eget)).
 
 📑 **Note:** if you don't feel like messing with dependecies on your host OS, skip to the [Docker](#using-from-docker) part.
 
@@ -62,68 +63,44 @@ sudo nmap --script-updatedb
 #### Masscan
 
 ```bash
-cd /tmp
+pushd /tmp
 wget https://github.com/robertdavidgraham/masscan/archive/refs/heads/master.zip -O masscan-master.zip
 unzip masscan-master.zip
 cd masscan-master
 make
 sudo make install
-cd && rm -rf /tmp/masscan-master*
+popd && rm -rf /tmp/masscan-master*
 ```
 
 #### RustScan
 
 ```bash
-cd /tmp
-
-wget https://api.github.com/repos/RustScan/RustScan/releases/latest -qO- \
-| grep "browser_download_url.*amd64.deb" \
-| cut -d: -f2,3 \
-| tr -d \" \
-| wget -qO rustscan.deb -i-
-
-sudo dpkg -i rustscan.deb
-cd && rm /tmp/rustscan.deb
-
+eget -t 2.0.1 -a amd64 RustScan/RustScan --to /tmp
+sudo dpkg -i /tmp/rustscan_2.0.1_amd64.deb && rm /tmp/rustscan_2.0.1_amd64.deb
 sudo wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/raw/fe8628396616c4bf7a3e25f2c9d1acc2f36af0c0/rustscan-ports-top1000.toml -O /root/.rustscan.toml
 ```
 
 #### Naabu
 
 ```bash
-sudo mkdir /opt/projectdiscovery
-sudo chown $USER:$USER /opt/projectdiscovery
-cd /opt/projectdiscovery
+sudo mkdir /opt/naabu
+sudo eget -s linux/amd64 projectdiscovery/naabu --to /opt/naabu
+sudo ln -s /opt/naabu/naabu /usr/local/bin/naabu
+```
 
-wget https://api.github.com/repos/projectdiscovery/naabu/releases/latest -qO- \
-| grep "browser_download_url.*linux_amd64.zip" \
-| cut -d: -f2,3 \
-| tr -d \" \
-| wget -qO naabu.zip -i-
+#### sx
 
-unzip naabu.zip
-chmod +x naabu
-cd && rm /opt/projectdiscovery/naabu.zip
-
-sudo ln -s /opt/projectdiscovery/naabu /usr/local/bin/naabu
+```bash
+sudo mkdir /opt/sx
+sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
+sudo ln -s /opt/sx/sx /usr/local/bin/sxs
 ```
 
 #### NimScan
 
 ```bash
 sudo mkdir /opt/nimscan
-sudo chown $USER:$USER /opt/nimscan
-cd /opt/nimscan
-
-wget https://api.github.com/repos/elddy/NimScan/releases/latest -qO- \
-| grep 'browser_download_url.*NimScan"' \
-| cut -d: -f2,3 \
-| tr -d \" \
-| wget -qO nimscan -i-
-
-chmod +x nimscan
-cd
-
+sudo eget -a NimScan elddy/NimScan --to /opt/nimscan
 sudo ln -s /opt/nimscan/nimscan /usr/local/bin/nimscan
 ```
 
@@ -179,16 +156,19 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ⚠️ **Warning:** please, make sure that you understand what you're doing, because nearly all port scanning tools [can damage the system being tested](https://github.com/RustScan/RustScan/wiki/Usage#%EF%B8%8F-warning) if used improperly.
 
 ```console
+# Nmap, -v flag is always required for correct parsing!
+~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 # Masscan
 ~$ das add masscan '--rate 1000 -iL hosts.txt -p1-65535 --open'
 # RustScan
 ~$ das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
 # Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
+# sx
+~$ sudo sxs arp -i eth0 192.168.1.0/24 --json | tee arp.cache
+~$ das add sxs 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
 # NimScan
 ~$ das add nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
-# Nmap, -v flag is always required for correct parsing!
-~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 ```
 
 When the module starts its work, a directory `~/.das/db` is created where the database file and raw scan results will be put when the module routine finishes.
@@ -369,7 +349,7 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 
 * [x] <strike>Add [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu) parser</strike>
 * [x] <strike>Add [elddy/NimScan](https://github.com/elddy/NimScan) parser</strike>
-* [ ] Add [sx](https://github.com/v-byte-cpu/sx) parser
+* [x] <strike>Add [sx](https://github.com/v-byte-cpu/sx) parser</strike>
 * [ ] Add [ZMap](https://github.com/zmap/zmap) parser
 * [ ] Add armada (?) parser
 * [ ] Store hostnames (if there're any) next to their IP values
