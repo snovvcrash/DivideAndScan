@@ -93,7 +93,7 @@ sudo ln -s /opt/naabu/naabu /usr/local/bin/naabu
 ```bash
 sudo mkdir /opt/sx
 sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
-sudo ln -s /opt/sx/sx /usr/local/bin/sxs
+sudo ln -s /opt/sx/sx /usr/local/bin/sx
 ```
 
 #### NimScan
@@ -165,8 +165,8 @@ Provide the `add` module a command for a fast port scanner to discover open port
 # Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
 # sx
-~$ sudo sxs arp -i eth0 192.168.1.0/24 --json | tee arp.cache
-~$ das add sxs 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
+~$ sudo sx arp -i eth0 192.168.1.0/24 --json | tee arp.cache
+~$ das add sx 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
 # NimScan
 ~$ das add nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 ```

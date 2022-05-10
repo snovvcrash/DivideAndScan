@@ -59,7 +59,7 @@ wget https://api.github.com/repos/v-byte-cpu/sx/releases/latest -qO- \
 
 tar -xzf sx.tar.gz
 chmod +x sx
-ln -s `readlink -f sx` /usr/local/bin/sxs
+ln -s `readlink -f sx` /usr/local/bin/sx
 popd 2>&1 > /dev/null && rm /opt/sx/sx.tar.gz
 
 # NimScan
