@@ -85,7 +85,7 @@ sudo wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/ra
 ```bash
 sudo mkdir /opt/naabu
 sudo eget -s linux/amd64 projectdiscovery/naabu --to /opt/naabu
-sudo ln -s /opt/naabu/naabu /usr/local/bin/naabu
+sudo ln -sv /opt/naabu/naabu /usr/local/bin/naabu
 ```
 
 #### sx
@@ -93,7 +93,7 @@ sudo ln -s /opt/naabu/naabu /usr/local/bin/naabu
 ```bash
 sudo mkdir /opt/sx
 sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
-sudo ln -s /opt/sx/sx /usr/local/bin/sx
+sudo ln -sv /opt/sx/sx /usr/local/bin/sx
 ```
 
 #### NimScan
@@ -101,7 +101,7 @@ sudo ln -s /opt/sx/sx /usr/local/bin/sx
 ```bash
 sudo mkdir /opt/nimscan
 sudo eget -a NimScan elddy/NimScan --to /opt/nimscan
-sudo ln -s /opt/nimscan/nimscan /usr/local/bin/nimscan
+sudo ln -sv /opt/nimscan/nimscan /usr/local/bin/nimscan
 ```
 
 ### Installation
