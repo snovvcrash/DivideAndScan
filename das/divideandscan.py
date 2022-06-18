@@ -32,8 +32,8 @@ def parse_args():
 	  das -db testdb add masscan '-e eth0 --rate 1000 -iL hosts.txt -p1-65535 --open'
 	  das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config --scan-order "Random"'
 	  das -db testdb add naabu '-interface eth0 -rate 1000 -iL hosts.txt -p - -silent -s s'
-	  das add sx 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
-	  das -db testdb add -rm nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
+	  das add -rm nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
+	  das -db testdb add sx 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
 	""".replace('\t', '')
 	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan and add the output to DB')
 	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')

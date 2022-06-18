@@ -36,8 +36,8 @@ Potential use cases:
 * [Masscan](https://github.com/robertdavidgraham/masscan)
 * [RustScan](https://github.com/RustScan/RustScan)
 * [Naabu](https://github.com/projectdiscovery/naabu)
-* [sx](https://github.com/v-byte-cpu/sx)
 * [NimScan](https://github.com/elddy/NimScan)
+* [sx](https://github.com/v-byte-cpu/sx)
 
 > **DISCLAIMER.** All information contained in this repository is provided for educational and research purposes only. The author is not responsible for any illegal use of this tool.
 
@@ -88,20 +88,20 @@ sudo eget -s linux/amd64 projectdiscovery/naabu --to /opt/naabu
 sudo ln -sv /opt/naabu/naabu /usr/local/bin/naabu
 ```
 
-#### sx
-
-```bash
-sudo mkdir /opt/sx
-sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
-sudo ln -sv /opt/sx/sx /usr/local/bin/sx
-```
-
 #### NimScan
 
 ```bash
 sudo mkdir /opt/nimscan
 sudo eget -a NimScan elddy/NimScan --to /opt/nimscan
 sudo ln -sv /opt/nimscan/nimscan /usr/local/bin/nimscan
+```
+
+#### sx
+
+```bash
+sudo mkdir /opt/sx
+sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
+sudo ln -sv /opt/sx/sx /usr/local/bin/sx
 ```
 
 ### Installation
@@ -166,11 +166,11 @@ Provide the `add` module a command for a fast port scanner to discover open port
 ~$ das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config'
 # Naabu
 ~$ das add naabu '-rate 1000 -iL hosts.txt -p - -silent -s s'
+# NimScan
+~$ das add nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 # sx
 ~$ sudo sx arp -i eth0 192.168.1.0/24 --json | tee arp.cache
 ~$ das add sx 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
-# NimScan
-~$ das add nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 ```
 
 When the module starts its work, a directory `~/.das/db` is created where the database file and raw scan results will be put when the module routine finishes.

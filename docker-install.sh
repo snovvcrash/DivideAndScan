@@ -46,6 +46,21 @@ chmod +x naabu
 ln -s `readlink -f naabu` /usr/local/bin/naabu
 popd 2>&1 > /dev/null && rm /opt/naabu/naabu.zip
 
+# NimScan
+
+mkdir /opt/nimscan
+pushd /opt/nimscan 2>&1 > /dev/null
+
+wget https://api.github.com/repos/elddy/NimScan/releases/latest -qO- \
+| grep 'browser_download_url.*NimScan"' \
+| cut -d: -f2,3 \
+| tr -d \" \
+| wget -qO nimscan -i-
+
+chmod +x nimscan
+ln -s `readlink -f nimscan` /usr/local/bin/nimscan
+popd 2>&1 > /dev/null
+
 # sx
 
 mkdir /opt/sx
@@ -61,21 +76,6 @@ tar -xzf sx.tar.gz
 chmod +x sx
 ln -s `readlink -f sx` /usr/local/bin/sx
 popd 2>&1 > /dev/null && rm /opt/sx/sx.tar.gz
-
-# NimScan
-
-mkdir /opt/nimscan
-pushd /opt/nimscan 2>&1 > /dev/null
-
-wget https://api.github.com/repos/elddy/NimScan/releases/latest -qO- \
-| grep 'browser_download_url.*NimScan"' \
-| cut -d: -f2,3 \
-| tr -d \" \
-| wget -qO nimscan -i-
-
-chmod +x nimscan
-ln -s `readlink -f nimscan` /usr/local/bin/nimscan
-popd 2>&1 > /dev/null
 
 # DivideAndScan
 
