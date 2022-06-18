@@ -7,6 +7,7 @@ from importlib import import_module
 from collections import namedtuple
 from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFormatter
 
+import das.common
 from das.scan import ScanShow, ScanRun
 from das.report import NmapMerger
 from das.common import BANNER, Logger
@@ -72,7 +73,7 @@ def parse_args():
 	  das report -ports 22,80,443,445 -oA report2
 	  das report -ports ports.txt -oA report2
 	""".replace('\t', '')
-	report_parser = subparser.add_parser('report', formatter_class=RawDescriptionHelpFormatter, epilog=report_epilog, help='merge separate Nmap outputs into a single report in different formats')
+	report_parser = subparser.add_parser('report', formatter_class=RawDescriptionHelpFormatter, epilog=report_epilog, help='merge separate Nmap outputs into a single report in different formats (https://github.com/CBHue/nMap_Merger)')
 	group_action = report_parser.add_mutually_exclusive_group(required=True)
 	group_action.add_argument('-show', action='store_true', default=False, help='only show Nmap raw reports, do not merge into a file')
 	group_action.add_argument('-oA', action='store', type=str, default=None, help='final report filename without extension (all formats: HTML, XML, simple text, grepable)')
@@ -83,7 +84,17 @@ def parse_args():
 	group_criteria.add_argument('-hosts', action='store', type=str, help='hosts to add to report by IP (a comma-separated string of IPs and/or CIDRs or a filename; "all" for all host reports in Nmap directory)')
 	group_criteria.add_argument('-ports', action='store', type=str, help='hosts to add to report by port (a comma-separated string of ports or a filename; "all" for all port reports in Nmap directory)')
 
-	tree_parser = subparser.add_parser('tree', help='show contents of the ~/.das directory using tree')
+	draw_epilog = """
+	examples:
+
+	  das draw report1.xml
+	  das draw *.xml -listen 0.0.0.0
+	""".replace('\t', '')
+	draw_parser = subparser.add_parser('draw', formatter_class=RawDescriptionHelpFormatter, epilog=draw_epilog, help='visualize Nmap XML reports (https://github.com/jor6PS/DrawNmap)')
+	draw_parser.add_argument('xml_reports', action='store', type=str, nargs='+', default=[], help='Nmap XML reports to visualize')
+	draw_parser.add_argument('-l', '--listen', action='store', type=str, default='localhost', help='IP address to listen on for the visualization app (use "0.0.0.0" if ran in Docker)')
+
+	tree_parser = subparser.add_parser('tree', help='show contents of the ~/.das/ directory using tree')
 
 	helper_parser = subparser.add_parser('help', help='show builtin --help dialog of a selected port scanner')
 	helper_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
@@ -98,7 +109,7 @@ def main():
 	args = parse_args()
 
 	if len(sys.argv) == 1:
-		print('usage: __main__.py [-h] {add,scan,report,tree,help} ...\n')
+		print('usage: __main__.py [-h] {add,scan,report,draw,tree,help} ...\n')
 		print(BANNER)
 		sys.exit(0)
 
@@ -174,6 +185,11 @@ def main():
 		elif any(o for o in output.values()):
 			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
+
+	elif args.subparser == 'draw':
+		das.common.XML_REPORTS = args.xml_reports
+		from das.drawnmap import run_server
+		run_server(host=args.listen)
 
 	elif args.subparser == 'tree':
 		os.system(f'tree {Path.home() / ".das"}')

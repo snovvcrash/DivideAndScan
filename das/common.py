@@ -2,7 +2,7 @@
 
 __author__ = '@snovvcrash'
 __site__ = 'https://github.com/snovvcrash/DivideAndScan'
-__version__ = '0.2.8'
+__version__ = '0.2.9'
 
 import time
 from datetime import datetime, timedelta
@@ -20,6 +20,8 @@ BANNER = """\
 """ % (__author__, __site__, __version__)
 
 SEP = '#############################################'
+
+XML_REPORTS = []
 
 
 class Logger:
@@ -61,6 +63,16 @@ class Logger:
 		:type msg: str
 		"""
 		print(f'[\033[1;32m+\033[0m] {msg}')
+
+	@staticmethod
+	def print_warning(msg):
+		"""
+		Print warning message.
+
+		:param msg: the message to print
+		:type msg: str
+		"""
+		print(f'[\033[1;33m!\033[0m] {msg}')
 
 	@staticmethod
 	def print_error(msg):

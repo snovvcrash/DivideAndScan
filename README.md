@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.8-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.2.9-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -22,7 +22,7 @@
 2. Run Nmap individually for each target with version grabbing and NSE actions.
 3. Merge the results into a single Nmap report (different formats available).
 
-For the 1st phase a *fast port scanner*\* is intended to be used, whose output is parsed and stored in a single file database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger).
+For the 1st phase a *fast port scanner*\* is intended to be used, whose output is parsed and stored in a single file database ([TinyDB](https://github.com/msiemens/tinydb)). Next, during the 2nd phase individual Nmap scans are launched for each target with its set of open ports (multiprocessing is supported) according to the database data. Finally, in the 3rd phase separate Nmap outputs are merged into a single report in different formats (XML / HTML / simple text / grepable) with [nMap_Merger](https://github.com/CBHue/nMap_Merger). The visualization portion is provided by [DrawNmap](https://github.com/jor6PS/DrawNmap).
 
 Potential use cases:
 
@@ -131,13 +131,15 @@ For debbugging purposes you can set up a dev environment with [poetry](https://g
 You can run DivideAndScan in a Docker container as follows:
 
 ```console
-~$ docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app snovvcrash/divideandscan
+~$ docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app -p 8050:8050 snovvcrash/divideandscan
 ```
 
-Since the tool requires some input data and produces some output data, you should specify your current working directory as the mount point at `/app` within the container. You may want to set an alias to make the base command shorter:
+Since the tool requires some input data and produces some output data, you should specify your current working directory as the mount point at `/app` within the container. Also publishing port 8050 on host allows to access the [Dash](https://github.com/plotly/dash) app used for Nmap reports visualization.
+
+You may want to set an alias to make the base command shorter:
 
 ```console
-~$ alias das='docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app snovvcrash/divideandscan'
+~$ alias das='docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app -p 8050:8050 snovvcrash/divideandscan'
 ~$ das
 ```
 
@@ -318,7 +320,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 ## Help
 
 ```
-usage: das [-h] [-db DB] {add,scan,report,tree,help} ...
+usage: das [-h] [-db DB] {add,scan,report,draw,tree,help} ...
 
  -----------------------------------------------------------------------------------------------
 |  ________  .__      .__    .___        _____              .____________                       |
@@ -331,10 +333,11 @@ usage: das [-h] [-db DB] {add,scan,report,tree,help} ...
  -----------------------------------------------------------------------------------------------
 
 positional arguments:
-  {add,scan,report,tree,help}
+  {add,scan,report,draw,tree,help}
     add                 run a full port scan and add the output to DB
     scan                run targeted Nmap scans against hosts and ports from DB
-    report              merge separate Nmap outputs into a single report in different formats
+    report              merge separate Nmap outputs into a single report in different formats (https://github.com/CBHue/nMap_Merger)
+    draw                visualize Nmap XML reports (https://github.com/jor6PS/DrawNmap)
     tree                show contents of the ~/.das directory using tree
     help                show builtin --help dialog of a selected port scanner
 
