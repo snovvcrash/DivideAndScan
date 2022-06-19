@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.3.0-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.3.1-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -116,7 +116,7 @@ DivideAndScan is available on PyPI as `divideandscan`, though I recommend instal
 For debbugging purposes you can set up a dev environment with [poetry](https://github.com/python-poetry/poetry):
 
 ```console
-~$ git clone https://github.com/snovvcrash/DivideAndScan
+~$ git clone --recurse-submodules https://github.com/snovvcrash/DivideAndScan
 ~$ cd DivideAndScan
 ~$ poetry install
 ~$ poetry run das

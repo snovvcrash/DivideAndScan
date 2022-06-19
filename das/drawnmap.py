@@ -45,7 +45,7 @@ commas_count = header.count(',')
 valid = []
 for line in data:
 	if line.count(',') == commas_count-1 and any(pat in line for pat in ('tcp,', 'udp,')):
-		line = line.strip('"')
+		line = line.replace('"', '')
 		valid.append(line)
 	else:
 		#logger.print_warning(f'Removed broken line from CSV: "{line}"')
