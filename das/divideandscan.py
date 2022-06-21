@@ -73,7 +73,7 @@ def parse_args():
 	  das report -ports 22,80,443,445 -oA report2
 	  das report -ports ports.txt -oA report2
 	""".replace('\t', '')
-	report_parser = subparser.add_parser('report', formatter_class=RawDescriptionHelpFormatter, epilog=report_epilog, help='merge separate Nmap outputs into a single report in different formats (https://github.com/CBHue/nMap_Merger)')
+	report_parser = subparser.add_parser('report', formatter_class=RawDescriptionHelpFormatter, epilog=report_epilog, help='merge separate Nmap outputs into a single report (https://github.com/CBHue/nMap_Merger)')
 	group_action = report_parser.add_mutually_exclusive_group(required=True)
 	group_action.add_argument('-show', action='store_true', default=False, help='only show Nmap raw reports, do not merge into a file')
 	group_action.add_argument('-oA', action='store', type=str, default=None, help='final report filename without extension (all formats: HTML, XML, simple text, grepable)')

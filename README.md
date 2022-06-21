@@ -336,7 +336,7 @@ positional arguments:
   {add,scan,report,draw,tree,help}
     add                 run a full port scan and add the output to DB
     scan                run targeted Nmap scans against hosts and ports from DB
-    report              merge separate Nmap outputs into a single report in different formats (https://github.com/CBHue/nMap_Merger)
+    report              merge separate Nmap outputs into a single report (https://github.com/CBHue/nMap_Merger)
     draw                visualize Nmap XML reports (https://github.com/jor6PS/DrawNmap)
     tree                show contents of the ~/.das directory using tree
     help                show builtin --help dialog of a selected port scanner
