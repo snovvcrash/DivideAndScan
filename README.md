@@ -131,7 +131,7 @@ For debbugging purposes you can set up a dev environment with [poetry](https://g
 You can run DivideAndScan in a Docker container as follows:
 
 ```console
-~$ docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app -p 8050:8050 snovvcrash/divideandscan
+~$ docker run --rm -it --name das -v ~/.das:/root/.das -v `pwd`:/app -p 8050:8050 snovvcrash/divideandscan
 ```
 
 Since the tool requires some input data and produces some output data, you should specify your current working directory as the mount point at `/app` within the container. Also publishing port 8050 on host allows to access the [Dash](https://github.com/plotly/dash) app used for Nmap reports visualization.
@@ -139,7 +139,7 @@ Since the tool requires some input data and produces some output data, you shoul
 You may want to set an alias to make the base command shorter:
 
 ```console
-~$ alias das='docker run -it --rm --name das -v ~/.das:/root/.das -v `pwd`:/app -p 8050:8050 snovvcrash/divideandscan'
+~$ alias das='docker run --rm -it --name das -v ~/.das:/root/.das -v `pwd`:/app -p 8050:8050 snovvcrash/divideandscan'
 ~$ das
 ```
 
