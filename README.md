@@ -159,7 +159,7 @@ Provide the `add` module a command for a fast port scanner to discover open port
 
 ```console
 # Nmap, -v flag is always required for correct parsing!
-~$ das add nmap '-v -n -Pn --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
+~$ das add nmap '-v -n -Pn -e eth0 --min-rate 1000 -T4 -iL hosts.txt -p1-65535 --open'
 # Masscan
 ~$ das add masscan '--rate 1000 -iL hosts.txt -p1-65535 --open'
 # RustScan
