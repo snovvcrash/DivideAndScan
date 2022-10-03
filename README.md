@@ -356,9 +356,3 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 * [ ] Add [ZMap](https://github.com/zmap/zmap) parser
 * [ ] Add armada (?) parser
 * [ ] Store hostnames (if there're any) next to their IP values
-
-## Support
-
-If this tool has been useful for you, feel free to buy me a <strike>beer</strike> coffee!
-
-[![beer.png](https://user-images.githubusercontent.com/23141800/113611163-d03dd880-9656-11eb-9279-e5e2689b0c1b.png)](https://buymeacoff.ee/snovvcrash)
