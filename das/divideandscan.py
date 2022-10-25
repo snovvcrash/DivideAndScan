@@ -34,10 +34,11 @@ def parse_args():
 	  das -db testdb add naabu '-interface eth0 -rate 1000 -iL hosts.txt -p - -silent -s s'
 	  das add -rm nimscan '192.168.1.0/24 -vi -p:1-65535 -f:500'
 	  das -db testdb add sx 'tcp syn -a arp.cache -i eth0 --rate 1000/s 192.168.1.0/24 -p 445,3389'
+	  das add nmap nmap-20221025T004453.out  # import from ~/.das/db/raw
 	""".replace('\t', '')
 	add_parser = subparser.add_parser('add', formatter_class=RawDescriptionHelpFormatter, epilog=add_epilog, help='run a full port scan and add the output to DB')
-	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name')
-	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options')
+	add_parser.add_argument('scanner_name', action='store', type=str, help='port scanner name or path')
+	add_parser.add_argument('scanner_args', action='store', type=str, help='port scanner switches and options or text file with scan results to import')
 	add_parser.add_argument('-rm', action='store_true', default=False, help='drop the DB before updating its values')
 
 	scan_epilog = """
@@ -121,19 +122,19 @@ def main():
 	if args.subparser == 'add':
 		(Path.home() / '.das' / 'db' / 'raw').mkdir(parents=True, exist_ok=True)
 
-		scanner_name = Path(args.scanner_name).name
+		module_name = Path(args.scanner_name).name
 		try:
-			AddPortscanOutput = import_module(f'das.parsers.{scanner_name}', 'AddPortscanOutput').AddPortscanOutput
+			AddPortscanOutput = import_module(f'das.parsers.{module_name}', 'AddPortscanOutput').AddPortscanOutput
 		except ModuleNotFoundError:
-			logger.print_error(f"Unsupported port scanner '{scanner_name}'")
+			logger.print_error(f"Unsupported port scanner '{module_name}'")
 			sys.exit(1)
 		except Exception as e:
-			logger.print_error(f"Unknown error while loading '{scanner_name}' parser: {str(e)}")
+			logger.print_error(f"Unknown error while loading '{module_name}' parser: {str(e)}")
 			sys.exit(1)
 
 		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
 
-		apo = AddPortscanOutput(str(P), args.rm, scanner_name, args.scanner_args)
+		apo = AddPortscanOutput(str(P), args.rm, args.scanner_name, args.scanner_args)
 		portscan_out, num_of_hosts = apo.parse()
 
 		if P.exists():

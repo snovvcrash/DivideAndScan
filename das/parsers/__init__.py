@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import shutil
 from pathlib import Path
 from datetime import datetime
 from abc import ABC, abstractmethod
@@ -32,16 +33,26 @@ class IAddPortscanOutput(ABC):
 		if rm:
 			self.db.truncate()
 
-		self.portscan_out = f'{Path.home()}/.das/db/raw/{scanner_name}-{datetime.now().strftime("%Y%m%dT%H%M%S")}.out'
-		self.command = f"""sudo {scanner_name} {scanner_args} | tee {self.portscan_out}"""
+		raw_directory_path = Path.home() / '.das' / 'db' / 'raw'
+		scanner_path = Path(scanner_args)
 
-		Logger.print_cmd(self.command)
-		os.system(self.command)
+		is_import = False
+		if scanner_path.is_file():
+			self.portscan_out = raw_directory_path / scanner_path.name
+			shutil.copy2(scanner_path, self.portscan_out)
+			is_import = True
+		else:
+			self.portscan_out = raw_directory_path / f'{scanner_name}-{datetime.now().strftime("%Y%m%dT%H%M%S")}.out'
+			self.command = f"""sudo {scanner_name} {scanner_args} | tee {self.portscan_out}"""
+
+			Logger.print_cmd(self.command)
+			os.system(self.command)
 
 		with open(self.portscan_out, 'r+', encoding='utf-8') as fd:
 			content = fd.read()
-			fd.seek(0)
-			fd.write(f'# {self.command}\n\n{content}')
+			if not is_import:
+				fd.seek(0)
+				fd.write(f'# {self.command}\n\n{content}')
 			self.portscan_raw = content.splitlines()
 
 	@abstractmethod

@@ -99,11 +99,12 @@ class ScanShow(ScanBase):
 	def nmap_by_hosts(self):
 		"""Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched."""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
-			sorted_ports = ','.join([str(p) for p in sorted(ports)])
+			sorted_ports = sorted(ports)
 			if self.raw_output:
-				print(sorted_ports)
+				for port in sorted_ports:
+					print(f'{ip}:{port}')
 			else:
-				Logger.print_success(f'IP {ip} ({len(ports)}) -> [{sorted_ports}]')
+				Logger.print_success(f'IP {ip} ({len(ports)}) -> [{",".join([str(p) for p in sorted_ports])}]')
 
 	def nmap_by_ports(self):
 		"""Search DB by ports and print mapping "open_port -> [live_hosts]". No Nmap scan is launched."""
