@@ -116,7 +116,7 @@ def main():
 
 	logger = Logger()
 
-	if args.subparser == 'add' or args.subparser == 'scan' and not args.show:
+	if (args.subparser == 'add' and not Path(args.scanner_args).is_file) or args.subparser == 'scan' and not args.show:
 		logger.start_timer()
 
 	if args.subparser == 'add':
@@ -198,7 +198,7 @@ def main():
 	elif args.subparser == 'help':
 		os.system(f'{args.scanner_name} --help')
 
-	if args.subparser == 'add' or args.subparser == 'scan' and not args.show:
+	if (args.subparser == 'add' and not Path(args.scanner_args).is_file) or args.subparser == 'scan' and not args.show:
 		logger.stop_timer()
 
 
