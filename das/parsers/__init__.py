@@ -37,7 +37,7 @@ class IAddPortscanOutput(ABC):
 		scanner_path = Path(scanner_args)
 
 		is_import = False
-		if scanner_path.is_file():
+		if len(str(scanner_path)) < 255 and scanner_path.is_file():
 			self.portscan_out = raw_directory_path / scanner_path.name
 			shutil.copy2(scanner_path, self.portscan_out)
 			is_import = True
