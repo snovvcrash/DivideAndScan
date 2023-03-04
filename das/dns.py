@@ -29,7 +29,10 @@ class DNS:
 		Logger.print_info(f'Domain names to resolve -> {len(self.domains)}')
 
 		for domain in self.domains:
-			answers = dns.resolver.resolve(domain, 'A')
+			try:
+				answers = dns.resolver.resolve(domain, 'A')
+			except:
+				continue
 
 			doc_ids = []
 			for ip in answers:
