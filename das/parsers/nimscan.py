@@ -23,7 +23,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 			except Exception:
 				pass
 			else:
-				item = {'ip': ip, 'port': int(port)}
+				item = {'ip': ip, 'port': int(port), 'domains': []}
 				if item not in self.db:
 					self.db.insert(item)
 

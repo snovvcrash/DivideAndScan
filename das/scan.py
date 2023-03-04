@@ -96,13 +96,17 @@ class ScanBase:
 class ScanShow(ScanBase):
 	"""Child class for searching through DB and printing the results."""
 
-	def nmap_by_hosts(self):
+	def nmap_by_hosts(self, dns):
 		"""Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched."""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			sorted_ports = sorted(ports)
 			if self.raw_output:
 				for port in sorted_ports:
 					print(f'{ip}:{port}')
+			elif dns:
+				domains = self.db.search(self.Host.ip == ip)[0]['domains']
+				domains = f'[{",".join(domains)}]'
+				Logger.print_success(f'IP {ip}, Domains {domains} ({len(ports)}) -> [{",".join([str(p) for p in sorted_ports])}]')
 			else:
 				Logger.print_success(f'IP {ip} ({len(ports)}) -> [{",".join([str(p) for p in sorted_ports])}]')
 

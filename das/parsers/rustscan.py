@@ -21,7 +21,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 				pass
 			else:
 				for port in ast.literal_eval(ports):
-					item = {'ip': ip, 'port': port}
+					item = {'ip': ip, 'port': port, 'domains': []}
 					if item not in self.db:
 						self.db.insert(item)
 

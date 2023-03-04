@@ -10,6 +10,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFor
 import das.common
 from das.scan import ScanShow, ScanRun
 from das.report import NmapMerger
+from das.dns import DNS
 from das.common import BANNER, Logger
 
 
@@ -27,7 +28,6 @@ def parse_args():
 
 	add_epilog = """
 	examples:
-
 	  das add nmap '-v -n -Pn -e eth0 --min-rate 1000 -T4 -iL hosts.txt -p1-49151 --open'
 	  das -db testdb add masscan '-e eth0 --rate 1000 -iL hosts.txt -p1-65535 --open'
 	  das add rustscan '-b 1000 -t 2000 -u 5000 -a hosts.txt -r 1-65535 -g --no-config --scan-order "Random"'
@@ -43,7 +43,6 @@ def parse_args():
 
 	scan_epilog = """
 	examples:
-
 	  das scan -hosts all -show
 	  das scan -ports 22 -show -raw
 	  das scan -hosts 192.168.1.0/24,10.10.13.37 -oA report1 -nmap '-Pn -sVC -O'
@@ -53,6 +52,7 @@ def parse_args():
 	scan_parser = subparser.add_parser('scan', formatter_class=RawDescriptionHelpFormatter, epilog=scan_epilog, help='run targeted Nmap scans against hosts and ports from DB')
 	scan_parser.add_argument('-nmap', action='store', type=str, default=None, help='custom Nmap options, so the final command will be "sudo nmap <OPTIONS> -oA scan/$output $ip -p$ports" (default is "sudo nmap -Pn -sV --version-intensity 6 -O -oA scan/$output $ip -p$ports")')
 	scan_parser.add_argument('-raw', action='store_true', default=False, help='when -show is used, print the results in a raw list (no decorations)')
+	scan_parser.add_argument('-dns', action='store_true', default=False, help='when -hosts and -show are used, include domain names associated with corresponding IP addresses')
 	group_parallel = scan_parser.add_argument_group('parallelism')
 	group_parallel.add_argument('-parallel', action='store_true', default=False, help='run Nmap in multiple processes, number of processes is set with -p (-processes) argument')
 	group_parallel.add_argument('-proc', action='store', type=int, default=None, help='number of parallel Nmap processes (if no value is provided, it will default to the number of processors on the machine)')
@@ -66,9 +66,15 @@ def parse_args():
 	group_criteria.add_argument('-hosts', action='store', type=str, default=None, help='hosts to scan all their ports which were considered as open (a comma-separated string of IPs and/or CIDRs or a filename; "all" for all hosts in DB)')
 	group_criteria.add_argument('-ports', action='store', type=str, default=None, help='ports to scan on every host where it was considered as open (a comma-separated string of ports or a filename; "all" for all ports in DB)')
 
+	dns_epilog = """
+	examples:
+	  das dns domains.txt
+	""".replace('\t', '')
+	dns_parser = subparser.add_parser('dns', formatter_class=RawDescriptionHelpFormatter, epilog=dns_epilog, help='resolve "A" domain names into IP addresses and update DB items with them')
+	dns_parser.add_argument('domain_names', action='store', type=str, help='path to a newline-separated text file with domain names to resolve')
+
 	report_epilog = """
 	examples:
-
 	  das report -hosts all -show
 	  das report -hosts 192.168.1.0/24,10.10.13.37 -oA report1
 	  das report -ports 22,80,443,445 -oA report2
@@ -87,7 +93,6 @@ def parse_args():
 
 	draw_epilog = """
 	examples:
-
 	  das draw report1.xml
 	  das draw *.xml -listen 0.0.0.0
 	""".replace('\t', '')
@@ -159,7 +164,7 @@ def main():
 		if args.show:
 			ss = ScanShow(str(P), args.hosts, args.ports, args.raw)
 			if args.hosts:
-				ss.nmap_by_hosts()
+				ss.nmap_by_hosts(args.dns)
 			elif args.ports:
 				ss.nmap_by_ports()
 
@@ -186,6 +191,14 @@ def main():
 		elif any(o for o in output.values()):
 			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
+
+	elif args.subparser == 'dns':
+		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
+		if P.exists():
+			logger.print_info(f'Using DB -> {P.resolve()}')
+
+		d = DNS(str(P), Path(args.domain_names))
+		d.resolve()
 
 	elif args.subparser == 'draw':
 		das.common.XML_REPORTS = args.xml_reports

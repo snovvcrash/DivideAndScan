@@ -20,7 +20,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 				pass
 			else:
 				if proto == 'tcp':
-					item = {'ip': ip, 'port': int(port)}
+					item = {'ip': ip, 'port': int(port), 'domains': []}
 					if item not in self.db:
 						self.db.insert(item)
 

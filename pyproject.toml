@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "divideandscan"
-version = "0.3.2"
+version = "0.3.3"
 description = "Divide full port scan results and use it for targeted Nmap runs"
 authors = ["Sam Freeside <snovvcrash@protonmail.ch>"]
 license = "BSD-2-Clause"
@@ -33,6 +33,7 @@ dash = "^2.5.1"
 networkx = "^2.8.4"
 pandas = "^1.4.2"
 scipy = "^1.8.1"
+dnspython = "^2.3.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
