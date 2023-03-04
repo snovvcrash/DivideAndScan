@@ -356,3 +356,4 @@ Psst, hey buddy... Wanna do some organized p0r7 5c4nn1n6?
 * [ ] Add [ZMap](https://github.com/zmap/zmap) parser
 * [ ] Add armada (?) parser
 * [ ] Store hostnames (if there're any) next to their IP values
+* [ ] Add `fuff` switch to automate web directory fuzzing
