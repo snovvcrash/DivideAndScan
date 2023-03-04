@@ -21,7 +21,7 @@ jobs:
     #    pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
     #    repository_url: 'https://test.pypi.org/legacy/'
     - name: Build and publish distribution to PyPI
-      uses: JRubics/poetry-publish@v1.5
+      uses: JRubics/poetry-publish@v1.16
       with:
         python_version: '3.9'
         pypi_token: ${{ secrets.PYPI_API_TOKEN }}
