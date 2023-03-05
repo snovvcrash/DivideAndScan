@@ -115,7 +115,7 @@ def main():
 	args = parse_args()
 
 	if len(sys.argv) == 1:
-		print('usage: __main__.py [-h] {add,scan,report,draw,tree,help} ...\n')
+		print('usage: __main__.py [-h] {add,scan,dns,report,draw,tree,help} ...\n')
 		print(BANNER)
 		sys.exit(0)
 
