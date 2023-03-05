@@ -2,7 +2,7 @@
 
 __author__ = '@snovvcrash'
 __site__ = 'https://github.com/snovvcrash/DivideAndScan'
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 import time
 from datetime import datetime, timedelta
