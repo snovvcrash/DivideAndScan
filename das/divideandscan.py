@@ -9,8 +9,9 @@ from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFor
 
 import das.common
 from das.scan import ScanShow, ScanRun
-from das.report import NmapMerger
 from das.dns import DNS
+from das.report import NmapMerger
+from das.parsenmap import NmapParser
 from das.common import BANNER, Logger
 
 
@@ -51,7 +52,7 @@ def parse_args():
 	""".replace('\t', '')
 	scan_parser = subparser.add_parser('scan', formatter_class=RawDescriptionHelpFormatter, epilog=scan_epilog, help='run targeted Nmap scans against hosts and ports from DB')
 	scan_parser.add_argument('-nmap', action='store', type=str, default=None, help='custom Nmap options, so the final command will be "sudo nmap <OPTIONS> -oA scan/$output $ip -p$ports" (default is "sudo nmap -Pn -sV --version-intensity 6 -O -oA scan/$output $ip -p$ports")')
-	scan_parser.add_argument('-raw', action='store_true', default=False, help='when -show is used, print the results in a raw list (no decorations)')
+	scan_parser.add_argument('-raw', action='store_true', default=False, help='when -show is used, print the results in a raw list (no decorations or colors)')
 	scan_parser.add_argument('-dns', action='store_true', default=False, help='when -hosts and -show are used, include domain names associated with corresponding IP addresses')
 	group_parallel = scan_parser.add_argument_group('parallelism')
 	group_parallel.add_argument('-parallel', action='store_true', default=False, help='run Nmap in multiple processes, number of processes is set with -p (-processes) argument')
@@ -71,7 +72,7 @@ def parse_args():
 	  das dns domains.txt
 	""".replace('\t', '')
 	dns_parser = subparser.add_parser('dns', formatter_class=RawDescriptionHelpFormatter, epilog=dns_epilog, help='resolve "A" domain names into IP addresses and update DB items with them')
-	dns_parser.add_argument('domain_names', action='store', type=str, help='path to a newline-separated text file with domain names to resolve')
+	dns_parser.add_argument('domains', action='store', type=str, help='path to a newline-separated text file with domain names to resolve')
 
 	report_epilog = """
 	examples:
@@ -90,6 +91,16 @@ def parse_args():
 	group_criteria = report_parser.add_mutually_exclusive_group(required=True)
 	group_criteria.add_argument('-hosts', action='store', type=str, help='hosts to add to report by IP (a comma-separated string of IPs and/or CIDRs or a filename; "all" for all host reports in Nmap directory)')
 	group_criteria.add_argument('-ports', action='store', type=str, help='hosts to add to report by port (a comma-separated string of ports or a filename; "all" for all port reports in Nmap directory)')
+
+	parse_parser_epilog = """
+	examples:
+	  das parse 80
+	  das -db testdb parse 80,443 -dns -raw
+	""".replace('\t', '')
+	parse_parser = subparser.add_parser('parse', formatter_class=RawDescriptionHelpFormatter, epilog=parse_parser_epilog, help='parse raw Nmap XML reports by ports and print entries in format {service}://{host}:{port}}')
+	parse_parser.add_argument('ports', action='store', type=str, default=None, help='port values to search for (a comma-separated string of ports)')
+	parse_parser.add_argument('-dns', action='store_true', default=False, help='if a domain name is present in the DB for a specific host, then use it instead of an IP address when printing the output')
+	parse_parser.add_argument('-raw', action='store_true', default=False, help='print the results in a raw list (no decorations or colors)')
 
 	draw_epilog = """
 	examples:
@@ -115,7 +126,7 @@ def main():
 	args = parse_args()
 
 	if len(sys.argv) == 1:
-		print('usage: __main__.py [-h] {add,scan,dns,report,draw,tree,help} ...\n')
+		print('usage: __main__.py [-h] {add,scan,dns,report,parse,draw,tree,help} ...\n')
 		print(BANNER)
 		sys.exit(0)
 
@@ -181,6 +192,14 @@ def main():
 			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
 
+	elif args.subparser == 'dns':
+		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
+		if P.exists():
+			logger.print_info(f'Using DB -> {P.resolve()}')
+
+		d = DNS(str(P), Path(args.domains))
+		d.resolve()
+
 	elif args.subparser == 'report':
 		output = {'oA': args.oA, 'oX': args.oX, 'oN': args.oN, 'oG': args.oG}
 
@@ -192,13 +211,13 @@ def main():
 			nm = NmapMerger(args.db, args.hosts, args.ports, output)
 			nm.generate()
 
-	elif args.subparser == 'dns':
+	elif args.subparser == 'parse':
 		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
-		if P.exists():
+		if args.db and P.exists() and not args.raw:
 			logger.print_info(f'Using DB -> {P.resolve()}')
 
-		d = DNS(str(P), Path(args.domain_names))
-		d.resolve()
+		np = NmapParser(str(P), args.ports, args.dns, args.raw)
+		np.parse()
 
 	elif args.subparser == 'draw':
 		das.common.XML_REPORTS = args.xml_reports
