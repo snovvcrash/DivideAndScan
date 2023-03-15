@@ -7,9 +7,11 @@ import os
 import socket
 from pathlib import Path
 from collections import namedtuple
+from xml.etree.ElementTree import SubElement
 
 import defusedxml.ElementTree as ET
 from netaddr import IPNetwork
+from tinydb import TinyDB, Query
 
 from das.common import Logger
 
@@ -17,15 +19,16 @@ from das.common import Logger
 class NmapMerger:
 	"""Class for merging separate Nmap outputs into a single report in different formats."""
 
-	def __init__(self, db_name, hosts, ports, output=None):
+	def __init__(self, db_path, hosts, ports, output=None):
 		"""
 		Constructor.
 
-		:param db_name: database name
-		:param hosts: list of Nmap reports with host-like filenames to merge ("all" for all the reports in Nmap directory with host-like filenames)
-		:type hosts: list
-		:param ports: list of Nmap reports with port-like filenames to merge ("all" for all the reports in Nmap directory with port-like filenames)
-		:type ports: list
+		:param db_path: a TinyDB database file path
+		:type db_path: str
+		:param hosts: a string with comma-separated Nmap reports (ip-like filenames) to merge ("all" for all the reports in Nmap directory with host-like filenames)
+		:type hosts: str
+		:param ports: a string with comma-separated Nmap reports (port-like filenames) to merge ("all" for all the reports in Nmap directory with port-like filenames)
+		:type ports: str
 		:param output: dictionary containing output type information and desired output filename
 		:type output: dict
 		:return: class object
@@ -39,9 +42,11 @@ class NmapMerger:
 		else:
 			self.output = None
 
-		self.db_name = db_name
+		self.db = None
+		self.db_path = db_path
 
-		P = (Path.home() / '.das' / f'nmap_{self.db_name}').glob('*.*')
+		db_name = Path(db_path).stem
+		P = (Path.home() / '.das' / f'nmap_{db_name}').glob('*.*')
 		P = list(P)
 
 		if hosts:
@@ -111,6 +116,9 @@ class NmapMerger:
 
 	def generate(self):
 		"""Perform all the steps needed to generate a single Nmap report."""
+		self.db = TinyDB(self.db_path)
+		self.Host = Query()
+
 		if self.output.format in ('oX', 'oA'):
 			merged_xml = f'{self.output.filename}.xml'
 			for report in self.nmap_reports:
@@ -231,8 +239,7 @@ class NmapMerger:
 		with open(merged_xml, 'a') as mfd:
 			mfd.write(nmap_footer)
 
-	@staticmethod
-	def merge_nmap(xml_file, merged_xml):
+	def merge_nmap(self, xml_file, merged_xml):
 		"""
 		Add another Nmap XML report contents to the intermediate merged XML report.
 
@@ -247,6 +254,16 @@ class NmapMerger:
 			with open(xml_file) as fd:
 				nmap_xml, n = ET.parse(fd), 0
 				for host in nmap_xml.findall('host'):
+					hostnames = host.find('hostnames')
+					if hostnames is not None:
+						ip = host.find('address').attrib['addr']
+						domains = self.db.search(self.Host.ip == ip)[0]['domains']
+						if domains:
+							for domain in domains:
+								hostname = SubElement(hostnames, 'hostname')
+								hostname.set('name', domain)
+								hostname.set('type', 'A')
+
 					chost = ET.tostring(host, encoding='unicode', method='xml')
 					mfd.write(chost)
 					mfd.flush()

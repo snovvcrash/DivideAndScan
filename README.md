@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.3.5-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.3.6-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -338,7 +338,7 @@ positional arguments:
     scan                run targeted Nmap scans against hosts and ports from DB
     dns                 resolve "A" domain names into IP addresses and update DB items with them
     report              merge separate Nmap outputs into a single report (https://github.com/CBHue/nMap_Merger)
-    parse               parse raw Nmap XML reports by ports and print entries in format {service}://{host}:{port}}
+    parse               parse raw Nmap XML reports by service names and print entries in format {service}://{host}:{port}}
     draw                visualize Nmap XML reports (https://github.com/jor6PS/DrawNmap)
     tree                show contents of the ~/.das/ directory using tree
     help                show builtin --help dialog of a selected port scanner

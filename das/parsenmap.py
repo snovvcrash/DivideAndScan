@@ -9,9 +9,24 @@ from tinydb import TinyDB, Query
 from das.common import Logger
 
 class NmapParser:
+	"""Class for parsing Nmap XML reports by service names and print entries in format {service}://{host}:{port}}."""
 
-	def __init__(self, db_path, ports, dns, raw_output=False):
-		self.ports = [int(port) for port in ports.split(',')]
+	def __init__(self, db_path, services, dns, raw_output=False):
+		"""
+		Constructor.
+
+		:param db_path: a TinyDB database file path
+		:type db_path: str
+		:param services: a string with comma-separated service names
+		:type services: str
+		:param dns: a boolean flag which, when presented, indicates that domain names associated with corresponding IPs must be printed
+		:type dns: bool
+		:param raw_output: a boolean flag which, when presented, indicates that results must be printed in a raw list (no decorations or colors)
+		:type raw_output: bool
+		:return: class object
+		:rtype: das.report.NmapParser
+		"""
+		self.services = services.split(',')
 		
 		self.db = None
 		if dns:
@@ -28,6 +43,7 @@ class NmapParser:
 		self.xml_reports = [str(r) for r in sorted(xml_reports, key=lambda x: socket.inet_aton(x.stem.replace('-', '.')))]
 
 	def parse(self):
+		"""Print raw Nmap reports in simple text format."""
 		nm = nmap.PortScanner()
 
 		for xml_report in self.xml_reports:
@@ -38,8 +54,8 @@ class NmapParser:
 				if 'tcp' in nm[ip]:
 					for port in nm[ip]['tcp']:
 						if nm[ip]['tcp'][port]['state'] == 'open':
-							if port in self.ports:
-								service = nm[ip]['tcp'][port]['name']
+							service = nm[ip]['tcp'][port]['name']
+							if service in self.services:
 								if self.db:
 									domains = self.db.search(self.Host.ip == ip)[0]['domains']
 									if domains:

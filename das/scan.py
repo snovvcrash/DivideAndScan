@@ -23,11 +23,13 @@ class ScanBase:
 		Constructor.
 
 		:param db_path: a TinyDB database file path
-		:type db_path: tinydb.TinyDB
-		:param hosts: a list of hosts to interact with ("all" for all the hosts in DB)
-		:type hosts: list
-		:param ports: a list of ports to interact with ("all" for all the ports in DB)
-		:type ports: list
+		:type db_path: str
+		:param hosts: a string with comma-separated ip values to interact with ("all" for all the hosts in DB)
+		:type hosts: str
+		:param ports: a string with comma-separated port values to interact with ("all" for all the ports in DB)
+		:type ports: str
+		:param raw_output: a boolean flag which, when presented, indicates that results must be printed in a raw list (no decorations or colors)
+		:type raw_output: bool
 		:return: base class object
 		:rtype: das.scan.ScanBase
 		"""
@@ -97,7 +99,12 @@ class ScanShow(ScanBase):
 	"""Child class for searching through DB and printing the results."""
 
 	def nmap_by_hosts(self, dns):
-		"""Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched."""
+		"""
+		Search DB by hosts and print mapping "live_host -> [open_ports]". No Nmap scan is launched.
+		
+		:param dns: a boolean flag which, when presented, indicates that domain names associated with corresponding IPs must be printed
+		:type dns: bool
+		"""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			sorted_ports = sorted(ports)
 			if self.raw_output:

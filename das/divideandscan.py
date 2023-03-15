@@ -94,11 +94,11 @@ def parse_args():
 
 	parse_parser_epilog = """
 	examples:
-	  das parse 80
-	  das -db testdb parse 80,443 -dns -raw
+	  das parse http
+	  das -db testdb parse http,https -dns -raw
 	""".replace('\t', '')
-	parse_parser = subparser.add_parser('parse', formatter_class=RawDescriptionHelpFormatter, epilog=parse_parser_epilog, help='parse raw Nmap XML reports by ports and print entries in format {service}://{host}:{port}}')
-	parse_parser.add_argument('ports', action='store', type=str, default=None, help='port values to search for (a comma-separated string of ports)')
+	parse_parser = subparser.add_parser('parse', formatter_class=RawDescriptionHelpFormatter, epilog=parse_parser_epilog, help='parse raw Nmap XML reports by service names and print entries in format {service}://{host}:{port}}')
+	parse_parser.add_argument('services', action='store', type=str, default=None, help='service names to search for (a comma-separated string of services)')
 	parse_parser.add_argument('-dns', action='store_true', default=False, help='if a domain name is present in the DB for a specific host, then use it instead of an IP address when printing the output')
 	parse_parser.add_argument('-raw', action='store_true', default=False, help='print the results in a raw list (no decorations or colors)')
 
@@ -208,15 +208,19 @@ def main():
 			nm.show()
 
 		elif any(o for o in output.values()):
-			nm = NmapMerger(args.db, args.hosts, args.ports, output)
+			P = Path.home() / '.das' / 'db' / f'{args.db}.json'
+			if P.exists():
+				logger.print_info(f'Using DB -> {P.resolve()}')
+
+			nm = NmapMerger(str(P), args.hosts, args.ports, output)
 			nm.generate()
 
 	elif args.subparser == 'parse':
 		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
-		if args.db and P.exists() and not args.raw:
+		if args.dns and P.exists() and not args.raw:
 			logger.print_info(f'Using DB -> {P.resolve()}')
 
-		np = NmapParser(str(P), args.ports, args.dns, args.raw)
+		np = NmapParser(str(P), args.services, args.dns, args.raw)
 		np.parse()
 
 	elif args.subparser == 'draw':
