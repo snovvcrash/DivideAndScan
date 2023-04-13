@@ -189,7 +189,7 @@ def main():
 			elif args.ports:
 				sr.nmap_by_ports(args.nmap, parallel)
 
-			nm = NmapMerger(args.db, args.hosts, args.ports, output)
+			nm = NmapMerger(str(P), args.hosts, args.ports, output)
 			nm.generate()
 
 	elif args.subparser == 'dns':
