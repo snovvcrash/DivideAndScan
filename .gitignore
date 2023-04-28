@@ -24,7 +24,6 @@ env.bak/
 venv.bak/
 
 # Custom files
-*/*
 !/das/*
 !/.github/*
 TODO.txt
