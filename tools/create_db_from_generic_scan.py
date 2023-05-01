@@ -20,7 +20,7 @@ for line in dnsx:
     ip = ip.replace('[', '').replace(']', '')
     domains[ip].add(domain)
 
-items = [{'ip': ip, 'port': port, 'domains': list(domains[ip])} for ip, port in (line.split(':') for line in scan)]
+items = [{'ip': ip, 'port': int(port), 'domains': list(domains[ip])} for ip, port in (line.split(':') for line in scan)]
 
 db = TinyDB('db.json')
 db.truncate()
