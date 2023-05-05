@@ -24,7 +24,7 @@ das = 'das.divideandscan:main'
 divideandscan = 'das.divideandscan:main'
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
+python = ">=3.9,<3.12"
 tinydb = "^4.6.1"
 netaddr = "^0.8.0"
 defusedxml = "^0.7.1"

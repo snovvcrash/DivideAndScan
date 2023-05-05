@@ -18,7 +18,7 @@ from das.common import Logger
 class ScanBase:
 	"""Base class for searching DB and/or initiating Nmap scans."""
 
-	def __init__(self, db_path, hosts, ports, raw_output=False):
+	def __init__(self, db_path, hosts, ports, limit=None, raw_output=False):
 		"""
 		Constructor.
 
@@ -80,6 +80,7 @@ class ScanBase:
 
 			self.total_scans += len(self.port_dict)
 
+		self.limit = limit
 		self.raw_output = raw_output
 		if not self.raw_output:
 			Logger.print_info(f'Total scans -> {self.total_scans}')
@@ -106,6 +107,9 @@ class ScanShow(ScanBase):
 		:type dns: bool
 		"""
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
+			if self.limit is not None and len(ports) >= self.limit:
+				continue
+
 			sorted_ports = sorted(ports)
 			if self.raw_output:
 				for port in sorted_ports:
@@ -141,6 +145,9 @@ class ScanRun(ScanBase):
 		"""
 		nmap_commands, i = [], 1
 		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
+			if self.limit is not None and len(ports) >= self.limit:
+				continue
+
 			if not parallel.enabled:
 				Logger.print_separator(f'IP: {ip}', prefix=f'{i}/{self.total_scans}')
 

@@ -52,6 +52,7 @@ def parse_args():
 	""".replace('\t', '')
 	scan_parser = subparser.add_parser('scan', formatter_class=RawDescriptionHelpFormatter, epilog=scan_epilog, help='run targeted Nmap scans against hosts and ports from DB')
 	scan_parser.add_argument('-nmap', action='store', type=str, default=None, help='custom Nmap options, so the final command will be "sudo nmap <OPTIONS> -oA scan/$output $ip -p$ports" (default is "sudo nmap -Pn -sV --version-intensity 6 -O -oA scan/$output $ip -p$ports")')
+	scan_parser.add_argument('-limit', action='store', type=int, default=None, help='do NOT include hosts whose port list length is less than <LIMIT>')
 	scan_parser.add_argument('-raw', action='store_true', default=False, help='when -show is used, print the results in a raw list (no decorations or colors)')
 	scan_parser.add_argument('-dns', action='store_true', default=False, help='when -hosts and -show are used, include domain names associated with corresponding IP addresses')
 	group_parallel = scan_parser.add_argument_group('parallelism')
@@ -173,7 +174,7 @@ def main():
 			logger.print_info(f'Using DB -> {P.resolve()}')
 
 		if args.show:
-			ss = ScanShow(str(P), args.hosts, args.ports, args.raw)
+			ss = ScanShow(str(P), args.hosts, args.ports, args.limit, args.raw)
 			if args.hosts:
 				ss.nmap_by_hosts(args.dns)
 			elif args.ports:
@@ -183,7 +184,7 @@ def main():
 			Parallelism = namedtuple('Parallelism', 'enabled processes')
 			parallel = Parallelism(args.parallel, args.proc)
 
-			sr = ScanRun(str(P), args.hosts, args.ports)
+			sr = ScanRun(str(P), args.hosts, args.ports, args.limit)
 			if args.hosts:
 				sr.nmap_by_hosts(args.nmap, parallel)
 			elif args.ports:
