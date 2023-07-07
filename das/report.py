@@ -257,12 +257,16 @@ class NmapMerger:
 					hostnames = host.find('hostnames')
 					if hostnames is not None:
 						ip = host.find('address').attrib['addr']
-						domains = self.db.search(self.Host.ip == ip)[0]['domains']
-						if domains:
-							for domain in domains:
-								hostname = SubElement(hostnames, 'hostname')
-								hostname.set('name', domain)
-								hostname.set('type', 'A')
+						try:
+							domains = self.db.search(self.Host.ip == ip)[0]['domains']
+						except:
+							pass
+						else:
+							if domains:
+								for domain in domains:
+									hostname = SubElement(hostnames, 'hostname')
+									hostname.set('name', domain)
+									hostname.set('type', 'A')
 
 					chost = ET.tostring(host, encoding='unicode', method='xml')
 					mfd.write(chost)
