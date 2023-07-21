@@ -31,7 +31,9 @@ class NmapParser:
 		self.db = None
 		if dns:
 			self.db = TinyDB(db_path)
-			self.Host = Query()
+			self.ip_domains_dict = {}
+			for item in self.db.all():
+				self.ip_domains_dict[item['ip']] = item['domains']
 
 		self.raw_output = raw_output
 
@@ -57,7 +59,7 @@ class NmapParser:
 							service = nm[ip]['tcp'][port]['name']
 							if service in self.services:
 								if self.db:
-									domains = self.db.search(self.Host.ip == ip)[0]['domains']
+									domains = self.ip_domains_dict[ip]
 									if domains:
 										for domain in domains:
 											if not self.raw_output:

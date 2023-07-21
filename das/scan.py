@@ -54,11 +54,12 @@ class ScanBase:
 				hosts = [str(ip) for ip_obj in hosts for ip in ip_obj]
 				result = self.db.search(self.Host.ip.one_of(hosts))
 
-			self.ip_dict = defaultdict(set)
+			self.ip_ports_dict, self.ip_domains_dict = defaultdict(set), {}
 			for item in result:
-				self.ip_dict[item['ip']].add(item['port'])
+				self.ip_ports_dict[item['ip']].add(item['port'])
+				self.ip_domains_dict[item['ip']] = item['domains']
 
-			self.total_scans += len(self.ip_dict)
+			self.total_scans += len(self.ip_ports_dict)
 
 		elif ports:
 			try:
@@ -74,11 +75,11 @@ class ScanBase:
 				ports = [int(p) for p in ports.split(',')]
 				result = self.db.search(self.Host.port.one_of(ports))
 
-			self.port_dict = defaultdict(set)
+			self.port_ip_dict = defaultdict(set)
 			for item in result:
-				self.port_dict[item['port']].add(item['ip'])
+				self.port_ip_dict[item['port']].add(item['ip'])
 
-			self.total_scans += len(self.port_dict)
+			self.total_scans += len(self.port_ip_dict)
 
 		self.limit = limit
 		self.raw_output = raw_output
@@ -106,7 +107,7 @@ class ScanShow(ScanBase):
 		:param dns: a boolean flag which, when presented, indicates that domain names associated with corresponding IPs must be printed
 		:type dns: bool
 		"""
-		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
+		for ip, ports in sorted(self.ip_ports_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			if self.limit is not None and len(ports) >= self.limit:
 				continue
 
@@ -115,15 +116,14 @@ class ScanShow(ScanBase):
 				for port in sorted_ports:
 					print(f'{ip}:{port}')
 			elif dns:
-				domains = self.db.search(self.Host.ip == ip)[0]['domains']
-				domains = f'[{",".join(domains)}]'
+				domains = f'[{",".join(self.ip_domains_dict[ip])}]'
 				Logger.print_success(f'IP {ip}, Domains {domains} ({len(ports)}) -> [{",".join([str(p) for p in sorted_ports])}]')
 			else:
 				Logger.print_success(f'IP {ip} ({len(ports)}) -> [{",".join([str(p) for p in sorted_ports])}]')
 
 	def nmap_by_ports(self):
 		"""Search DB by ports and print mapping "open_port -> [live_hosts]". No Nmap scan is launched."""
-		for port, ip_list in sorted(self.port_dict.items()):
+		for port, ip_list in sorted(self.port_ip_dict.items()):
 			sorted_ip_list = ','.join(sorted(ip_list, key=socket.inet_aton))
 			if self.raw_output:
 				print(sorted_ip_list.replace(',', '\n'))
@@ -144,7 +144,7 @@ class ScanRun(ScanBase):
 		:type parallel: collections.namedtuple
 		"""
 		nmap_commands, i = [], 1
-		for ip, ports in sorted(self.ip_dict.items(), key=lambda x: socket.inet_aton(x[0])):
+		for ip, ports in sorted(self.ip_ports_dict.items(), key=lambda x: socket.inet_aton(x[0])):
 			if self.limit is not None and len(ports) >= self.limit:
 				continue
 
@@ -182,7 +182,7 @@ class ScanRun(ScanBase):
 		:type parallel: collections.namedtuple
 		"""
 		nmap_commands, i = [], 1
-		for port, ip_list in sorted(self.port_dict.items()):
+		for port, ip_list in sorted(self.port_ip_dict.items()):
 			if not parallel.enabled:
 				Logger.print_separator(f'Port: {port}', prefix=f'{i}/{self.total_scans}')
 
