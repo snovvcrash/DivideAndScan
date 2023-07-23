@@ -121,6 +121,14 @@ DivideAndScan is available on PyPI as `divideandscan`, though I recommend instal
 ~$ das
 ```
 
+There's also a release packed with [shiv](https://github.com/linkedin/shiv) (large file size though):
+
+```console
+# shiv -e das.divideandscan:main -o das.pyz divideandscan
+~$ eget snovvcrash/DivideAndScan --to das.pyz
+~$ ./das.pyz
+```
+
 For debbugging purposes you can set up a dev environment with [poetry](https://github.com/python-poetry/poetry):
 
 ```console
