@@ -8,6 +8,7 @@ from tinydb import TinyDB, Query
 
 from das.common import Logger
 
+
 class NmapParser:
 	"""Class for parsing Nmap XML reports by service names and print entries in format {service}://{host}:{port}}."""
 
@@ -27,8 +28,8 @@ class NmapParser:
 		:rtype: das.report.NmapParser
 		"""
 		self.services = services.split(',')
-		
-		self.db = None
+		self.dns = dns
+
 		if dns:
 			self.db = TinyDB(db_path)
 			self.ip_domains_dict = {}
@@ -58,7 +59,7 @@ class NmapParser:
 						if nm[ip]['tcp'][port]['state'] == 'open':
 							service = nm[ip]['tcp'][port]['name']
 							if service in self.services:
-								if self.db:
+								if self.dns:
 									domains = self.ip_domains_dict[ip]
 									if domains:
 										for domain in domains:

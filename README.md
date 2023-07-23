@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-0.3.8-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-1.0.0-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -102,6 +102,14 @@ sudo ln -sv /opt/nimscan/nimscan /usr/local/bin/nimscan
 sudo mkdir /opt/sx
 sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
 sudo ln -sv /opt/sx/sx /usr/local/bin/sx
+```
+
+#### dnsx
+
+```bash
+sudo mkdir /opt/pd
+sudo eget -s linux/amd64 projectdiscovery/dnsx --to /opt/pd
+sudo ln -sv /opt/pd/dnsx /usr/local/bin/dnsx
 ```
 
 ### Installation
@@ -320,7 +328,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 ## Help
 
 ```
-usage: das [-h] [-db DB] {add,scan,dns,report,parse,draw,tree,help} ...
+usage: das [-h] [-db DB] {db,add,scan,dns,report,parse,draw,tree,help} ...
 
  -----------------------------------------------------------------------------------------------
 |  ________  .__      .__    .___        _____              .____________                       |
@@ -333,10 +341,11 @@ usage: das [-h] [-db DB] {add,scan,dns,report,parse,draw,tree,help} ...
  -----------------------------------------------------------------------------------------------
 
 positional arguments:
-  {add,scan,dns,report,parse,draw,tree,help}
+  {db,add,scan,dns,report,parse,draw,tree,help}
+    db                  utilities for manual DB manipulations
     add                 run a full port scan and add the output to DB
     scan                run targeted Nmap scans against hosts and ports from DB
-    dns                 resolve "A" domain names into IP addresses and update DB items with them
+    dns                 map domain names from an input file to corresponding IP addresses from the DB
     report              merge separate Nmap outputs into a single report (https://github.com/CBHue/nMap_Merger)
     parse               parse raw Nmap XML reports by service names and print entries in format {service}://{host}:{port}}
     draw                visualize Nmap XML reports (https://github.com/jor6PS/DrawNmap)

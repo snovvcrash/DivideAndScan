@@ -8,6 +8,7 @@ from collections import namedtuple
 from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFormatter
 
 import das.common
+from das.db import DB
 from das.scan import ScanShow, ScanRun
 from das.dns import DNS
 from das.report import NmapMerger
@@ -26,6 +27,16 @@ def parse_args():
 	parser.add_argument('-db', action='store', type=str, default='main', help='DB name to work with')
 
 	subparser = parser.add_subparsers(dest='subparser')
+
+	db_epilog = """
+	examples:
+	  das -db testdb db scan.txt [-d domains.txt] [--create]
+	""".replace('\t', '')
+	db_parser = subparser.add_parser('db', formatter_class=RawDescriptionHelpFormatter, epilog=db_epilog, help='utilities for manual DB manipulations')
+	db_parser.add_argument('scan_output', action='store', type=str, help='path to a newline-separated text file with scan output to fill the DB with')
+	db_parser.add_argument('-d', '--domains', action='store', type=str, help='path to a newline-separated text file with with domain names to fill the DB with')
+	group_action = db_parser.add_mutually_exclusive_group(required=True)
+	group_action.add_argument('--create', action='store_true', default=False, help='create TinyDB from a generic scan output and (optionally) a list of domain names')
 
 	add_epilog = """
 	examples:
@@ -70,10 +81,13 @@ def parse_args():
 
 	dns_epilog = """
 	examples:
-	  das dns domains.txt
+	  das dns domains.txt [--resolve|--update]
 	""".replace('\t', '')
-	dns_parser = subparser.add_parser('dns', formatter_class=RawDescriptionHelpFormatter, epilog=dns_epilog, help='resolve "A" domain names into IP addresses and update DB items with them')
+	dns_parser = subparser.add_parser('dns', formatter_class=RawDescriptionHelpFormatter, epilog=dns_epilog, help='map domain names from an input file to corresponding IP addresses from the DB')
 	dns_parser.add_argument('domains', action='store', type=str, help='path to a newline-separated text file with domain names to resolve')
+	group_action = dns_parser.add_mutually_exclusive_group(required=True)
+	group_action.add_argument('--resolve', action='store_true', default=False, help='resolve "A" domain names into IP addresses and update DB items with them')
+	group_action.add_argument('--update', action='store_true', default=False, help='update existing DB with new domains names from an input file')
 
 	report_epilog = """
 	examples:
@@ -127,7 +141,7 @@ def main():
 	args = parse_args()
 
 	if len(sys.argv) == 1:
-		print('usage: __main__.py [-h] {add,scan,dns,report,parse,draw,tree,help} ...\n')
+		print('usage: __main__.py [-h] {db,add,scan,dns,report,parse,draw,tree,help} ...\n')
 		print(BANNER)
 		sys.exit(0)
 
@@ -136,7 +150,17 @@ def main():
 	if (args.subparser == 'add' and not Path(args.scanner_args).is_file) or args.subparser == 'scan' and not args.show:
 		logger.start_timer()
 
-	if args.subparser == 'add':
+	if args.subparser == 'db':
+		(Path.home() / '.das' / 'db' / 'raw').mkdir(parents=True, exist_ok=True)
+		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
+
+		db = DB(str(P))
+		if args.create:
+			logger.print_info(f'Creating DB -> {P.resolve()}')
+			num_created = db.create_generic(Path(args.scan_output), Path(args.domains))
+			logger.print_success(f'Successfully created DB with {num_created} hosts')
+
+	elif args.subparser == 'add':
 		(Path.home() / '.das' / 'db' / 'raw').mkdir(parents=True, exist_ok=True)
 
 		module_name = Path(args.scanner_name).name
@@ -152,7 +176,7 @@ def main():
 		P = Path.home() / '.das' / 'db' / f'{args.db}.json'
 
 		apo = AddPortscanOutput(str(P), args.rm, args.scanner_name, args.scanner_args)
-		portscan_out, num_of_hosts = apo.parse()
+		portscan_out, num_hosts = apo.parse()
 
 		if P.exists():
 			logger.print_info(f'Using DB -> {P.resolve()}')
@@ -161,7 +185,7 @@ def main():
 		if P.exists():
 			logger.print_info(f'Raw port scanner output -> {P.resolve()}')
 
-		logger.print_success(f'Successfully updated DB with {num_of_hosts} hosts')
+		logger.print_success(f'Successfully updated DB with {num_hosts} hosts')
 
 	elif args.subparser == 'scan':
 		if not args.show:
@@ -198,8 +222,12 @@ def main():
 		if P.exists():
 			logger.print_info(f'Using DB -> {P.resolve()}')
 
-		d = DNS(str(P), Path(args.domains))
-		d.resolve()
+		dns = DNS(str(P), Path(args.domains))
+		if args.resolve:
+			dns.resolve()
+		elif args.update:
+			num_updated = dns.update()
+			logger.print_success(f'Successfully updated {num_updated} hosts from DB with domain names')
 
 	elif args.subparser == 'report':
 		output = {'oA': args.oA, 'oX': args.oX, 'oN': args.oN, 'oG': args.oG}

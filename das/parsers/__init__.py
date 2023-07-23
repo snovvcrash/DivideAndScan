@@ -19,7 +19,7 @@ class IAddPortscanOutput(ABC):
 		Constructor.
 
 		:param db_path: a TinyDB database file path
-		:type db_path: pathlib.PosixPath
+		:type db_path: str
 		:param rm: a flag showing if we need to drop the DB before updating its values
 		:type rm: bool
 		:param scanner_name: name of the port scanner to run

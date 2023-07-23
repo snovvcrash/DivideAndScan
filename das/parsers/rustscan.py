@@ -13,7 +13,7 @@ class AddPortscanOutput(IAddPortscanOutput):
 		:return: a pair of values (portscan raw output filename, number of hosts added to DB)
 		:rtype: tuple
 		"""
-		hosts = set()
+		items, hosts = [], set()
 		for line in self.portscan_raw:
 			try:
 				ip, ports = line.split(' -> ')
@@ -21,10 +21,9 @@ class AddPortscanOutput(IAddPortscanOutput):
 				pass
 			else:
 				for port in ast.literal_eval(ports):
-					item = {'ip': ip, 'port': port, 'domains': []}
-					if item not in self.db:
-						self.db.insert(item)
+					items.append({'ip': ip, 'port': int(port), 'domains': []})
+					hosts.add(ip)
 
-				hosts.add(ip)
+		self.db.insert_multiple(items)
 
 		return (self.portscan_out, len(hosts))

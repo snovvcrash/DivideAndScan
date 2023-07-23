@@ -2,9 +2,11 @@
 
 __author__ = '@snovvcrash'
 __site__ = 'https://github.com/snovvcrash/DivideAndScan'
-__version__ = '0.3.8'
+__version__ = '1.0.0'
 
 import time
+import shlex
+import subprocess
 from datetime import datetime, timedelta
 
 BANNER = """\
@@ -108,3 +110,18 @@ class Logger:
 		:type prefix: str
 		"""
 		print(f'\033[0;31m{SEP} \033[0;32m({prefix}) \033[1;32m{msg}\033[0;31m {SEP}\033[0m')
+
+
+def run_command(command):
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+
+    result = ''
+    while True:
+        stdout = process.stdout.readline().decode()
+        if stdout == '' and process.poll() is not None:
+            break
+        if stdout:
+            result += stdout
+
+    #result = process.poll()
+    return result

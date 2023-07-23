@@ -77,6 +77,22 @@ chmod +x sx
 ln -s `readlink -f sx` /usr/local/bin/sx
 popd 2>&1 > /dev/null && rm /opt/sx/sx.tar.gz
 
+# dnsx
+
+mkdir /opt/pd
+pushd /opt/pd 2>&1 > /dev/null
+
+wget https://api.github.com/repos/projectdiscovery/dnsx/releases/latest -qO- \
+| grep "browser_download_url.*linux_amd64.zip" \
+| cut -d: -f2,3 \
+| tr -d \" \
+| wget -qO dnsx.zip -i-
+
+unzip -q dnsx.zip
+chmod +x dnsx
+ln -s `readlink -f dnsx` /usr/local/bin/dnsx
+popd 2>&1 > /dev/null && rm /opt/pd/dnsx.zip
+
 # DivideAndScan
 
 cd /app
