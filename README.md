@@ -121,11 +121,11 @@ DivideAndScan is available on PyPI as `divideandscan`, though I recommend instal
 ~$ das
 ```
 
-There's also a release packed with [shiv](https://github.com/linkedin/shiv) (large file size though):
+There's also a [release](https://github.com/snovvcrash/DivideAndScan/releases/latest) packed with [shiv](https://github.com/linkedin/shiv) (large file size though):
 
 ```console
 # shiv -e das.divideandscan:main -o das.pyz divideandscan
-~$ eget snovvcrash/DivideAndScan --to das.pyz
+~$ wget https://github.com/snovvcrash/DivideAndScan/releases/latest/download/das.pyz
 ~$ ./das.pyz
 ```
 
