@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-1.0.1-success" alt="version" /></a>
+  <a href="https://github.com/snovvcrash/DivideAndScan/blob/main/pyproject.toml#L3"><img src="https://img.shields.io/badge/version-1.0.2-success" alt="version" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/search?l=python"><img src="https://img.shields.io/badge/python-3.9-blue?logo=python&logoColor=white" alt="python" /></a>
   <a href="https://www.codacy.com/gh/snovvcrash/DivideAndScan/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=snovvcrash/DivideAndScan&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/35f0bdfece9846d7aab3888b01642813" alt="codacy" /></a>
   <a href="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml"><img src="https://github.com/snovvcrash/DivideAndScan/actions/workflows/publish-to-pypi.yml/badge.svg" alt="pypi" /></a>
@@ -33,7 +33,7 @@ Potential use cases:
 \* Available port scanners:
 
 * [Nmap](https://github.com/nmap/nmap)
-* [Masscan](https://github.com/robertdavidgraham/masscan)
+* [Masscan](https://github.com/ivre/masscan)
 * [RustScan](https://github.com/RustScan/RustScan)
 * [Naabu](https://github.com/projectdiscovery/naabu)
 * [NimScan](https://github.com/elddy/NimScan)
@@ -64,7 +64,7 @@ sudo nmap --script-updatedb
 
 ```bash
 pushd /tmp
-wget https://github.com/robertdavidgraham/masscan/archive/refs/heads/master.zip -O masscan-master.zip
+wget https://github.com/ivre/masscan/archive/refs/heads/master.zip -O masscan-master.zip
 unzip masscan-master.zip
 cd masscan-master
 make
@@ -125,7 +125,7 @@ There's also a [release](https://github.com/snovvcrash/DivideAndScan/releases/la
 
 ```console
 # shiv -e das.divideandscan:main -o das.pyz divideandscan
-~$ wget https://github.com/snovvcrash/DivideAndScan/releases/latest/download/das.pyz
+~$ wget https://github.com/snovvcrash/DivideAndScan/releases/latest/download/das.pyz && chmod +x das.pyz
 ~$ ./das.pyz
 ```
 

@@ -19,7 +19,7 @@ from das.common import Logger
 class NmapMerger:
 	"""Class for merging separate Nmap outputs into a single report in different formats."""
 
-	def __init__(self, db_path, hosts, ports, output=None):
+	def __init__(self, db_path, hosts, ports, dns, output=None):
 		"""
 		Constructor.
 
@@ -42,8 +42,12 @@ class NmapMerger:
 		else:
 			self.output = None
 
-		self.db = None
-		self.db_path = db_path
+		self.dns = dns
+		if dns:
+			self.db = TinyDB(db_path)
+			self.ip_domains_dict = {}
+			for item in self.db.all():
+				self.ip_domains_dict[item['ip']] = item['domains']
 
 		db_name = Path(db_path).stem
 		P = (Path.home() / '.das' / f'nmap_{db_name}').glob('*.*')
@@ -62,7 +66,7 @@ class NmapMerger:
 			else:
 				hosts = hosts.split(',')
 				hosts = [IPNetwork(h) for h in hosts]
-				hosts = [str(ip).replace('.', '-') for ip_obj in hosts for ip in ip_obj]
+				hosts = [str(ip) for ip_obj in hosts for ip in ip_obj]
 				self.nmap_reports = {x for h in hosts for x in P if h == x.stem}
 
 		elif ports:
@@ -104,7 +108,7 @@ class NmapMerger:
 		Logger.print_info(f'Total reports -> {total_reports}')
 
 		try:
-			sorted_reports = [str(r) for r in sorted(text_reports, key=lambda x: socket.inet_aton(x.stem.replace('-', '.')))]
+			sorted_reports = [str(r) for r in sorted(text_reports, key=lambda x: socket.inet_aton(x.stem))]
 		except OSError:
 			sorted_reports = [str(r) for r in sorted(text_reports)]
 
@@ -116,9 +120,6 @@ class NmapMerger:
 
 	def generate(self):
 		"""Perform all the steps needed to generate a single Nmap report."""
-		self.db = TinyDB(self.db_path)
-		self.Host = Query()
-
 		if self.output.format in ('oX', 'oA'):
 			merged_xml = f'{self.output.filename}.xml'
 			for report in self.nmap_reports:
@@ -147,7 +148,7 @@ class NmapMerger:
 			text_reports = [r for r in self.nmap_reports if r.suffix == '.nmap']
 
 			try:
-				sorted_reports = ' '.join(str(r) for r in sorted(text_reports, key=lambda x: socket.inet_aton(x.stem.replace('-', '.'))))
+				sorted_reports = ' '.join(str(r) for r in sorted(text_reports, key=lambda x: socket.inet_aton(x.stem)))
 			except OSError:
 				sorted_reports = ' '.join(str(r) for r in sorted(text_reports))
 
@@ -164,7 +165,7 @@ class NmapMerger:
 			grepable_reports = [r for r in self.nmap_reports if r.suffix == '.gnmap']
 
 			try:
-				sorted_reports = ' '.join(str(r) for r in sorted(grepable_reports, key=lambda x: socket.inet_aton(x.stem.replace('-', '.'))))
+				sorted_reports = ' '.join(str(r) for r in sorted(grepable_reports, key=lambda x: socket.inet_aton(x.stem)))
 			except OSError:
 				sorted_reports = ' '.join(str(r) for r in sorted(grepable_reports))
 
@@ -257,11 +258,8 @@ class NmapMerger:
 					hostnames = host.find('hostnames')
 					if hostnames is not None:
 						ip = host.find('address').attrib['addr']
-						try:
-							domains = self.db.search(self.Host.ip == ip)[0]['domains']
-						except:
-							pass
-						else:
+						if self.dns:
+							domains = self.ip_domains_dict[ip]
 							if domains:
 								for domain in domains:
 									hostname = SubElement(hostnames, 'hostname')

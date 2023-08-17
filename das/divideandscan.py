@@ -55,7 +55,7 @@ def parse_args():
 
 	scan_epilog = """
 	examples:
-	  das scan -hosts all -show
+	  das scan -hosts {all|new} -show
 	  das scan -ports 22 -show -raw
 	  das scan -hosts 192.168.1.0/24,10.10.13.37 -oA report1 -nmap '-Pn -sVC -O'
 	  das -db testdb scan -ports 22,80,443,445 -oA report2 -parallel
@@ -93,12 +93,13 @@ def parse_args():
 	examples:
 	  das report -hosts all -show
 	  das report -hosts 192.168.1.0/24,10.10.13.37 -oA report1
-	  das report -ports 22,80,443,445 -oA report2
+	  das report -ports 22,80,443,445 -dns -oA report2
 	  das report -ports ports.txt -oA report2
 	""".replace('\t', '')
 	report_parser = subparser.add_parser('report', formatter_class=RawDescriptionHelpFormatter, epilog=report_epilog, help='merge separate Nmap outputs into a single report (https://github.com/CBHue/nMap_Merger)')
 	group_action = report_parser.add_mutually_exclusive_group(required=True)
 	group_action.add_argument('-show', action='store_true', default=False, help='only show Nmap raw reports, do not merge into a file')
+	group_action.add_argument('-dns', action='store_true', default=False, help='if a domain name is present in the DB for a specific host, then add it to the report')
 	group_action.add_argument('-oA', action='store', type=str, default=None, help='final report filename without extension (all formats: HTML, XML, simple text, grepable)')
 	group_action.add_argument('-oX', action='store', type=str, default=None, help='final report filename without extension (XML+HTML formats)')
 	group_action.add_argument('-oN', action='store', type=str, default=None, help='final report filename without extension (simple text format)')
@@ -214,7 +215,7 @@ def main():
 			elif args.ports:
 				sr.nmap_by_ports(args.nmap, parallel)
 
-			nm = NmapMerger(str(P), args.hosts, args.ports, output)
+			nm = NmapMerger(str(P), args.hosts, args.ports, args.dns, output)
 			nm.generate()
 
 	elif args.subparser == 'dns':
@@ -241,7 +242,7 @@ def main():
 			if P.exists():
 				logger.print_info(f'Using DB -> {P.resolve()}')
 
-			nm = NmapMerger(str(P), args.hosts, args.ports, output)
+			nm = NmapMerger(str(P), args.hosts, args.ports, args.dns, output)
 			nm.generate()
 
 	elif args.subparser == 'parse':

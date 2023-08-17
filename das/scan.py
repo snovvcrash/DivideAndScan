@@ -35,7 +35,7 @@ class ScanBase:
 		"""
 		self.db_name = Path(db_path).stem
 		self.db = TinyDB(db_path)
-		self.Host = Query()
+		#self.Host = Query()
 		self.total_scans = 0
 
 		if hosts:
@@ -48,11 +48,17 @@ class ScanBase:
 
 			if hosts == 'all':
 				result = self.db.all()
+			elif hosts == 'new':
+				P = (Path.home() / '.das' / f'nmap_{self.db_name}').glob('*.*')
+				hosts = [ip.stem for ip in P]
+				#result = self.db.search(~(self.Host.ip.one_of(hosts)))
+				result = [item[ip] for item in self.db.all() for ip in hosts if item[ip] not in hosts]
 			else:
 				hosts = hosts.split(',')
 				hosts = [IPNetwork(h) for h in hosts]
 				hosts = [str(ip) for ip_obj in hosts for ip in ip_obj]
-				result = self.db.search(self.Host.ip.one_of(hosts))
+				#result = self.db.search(self.Host.ip.one_of(hosts))
+				result = [item[ip] for item in self.db.all() for ip in hosts]
 
 			self.ip_ports_dict, self.ip_domains_dict = defaultdict(set), {}
 			for item in result:
@@ -73,7 +79,8 @@ class ScanBase:
 				result = self.db.all()
 			else:
 				ports = [int(p) for p in ports.split(',')]
-				result = self.db.search(self.Host.port.one_of(ports))
+				#result = self.db.search(self.Host.port.one_of(ports))
+				result = [item[port] for item in self.db.all() for port in ports]
 
 			self.port_ip_dict = defaultdict(set)
 			for item in result:
@@ -115,6 +122,9 @@ class ScanShow(ScanBase):
 			if self.raw_output:
 				for port in sorted_ports:
 					print(f'{ip}:{port}')
+					if dns:
+						for domain in self.ip_domains_dict[ip]:
+							print(f'{domain}:{port}')
 			elif dns:
 				domains = f'[{",".join(self.ip_domains_dict[ip])}]'
 				Logger.print_success(f'IP {ip}, Domains {domains} ({len(ports)}) -> [{",".join([str(p) for p in sorted_ports])}]')
@@ -151,7 +161,7 @@ class ScanRun(ScanBase):
 			if not parallel.enabled:
 				Logger.print_separator(f'IP: {ip}', prefix=f'{i}/{self.total_scans}')
 
-			nmap_out = ip.replace('.', '-')
+			nmap_out = ip
 			sorted_ports = ','.join([str(p) for p in sorted(ports)])
 
 			if nmap_opts is None:

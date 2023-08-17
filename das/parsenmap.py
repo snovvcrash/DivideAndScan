@@ -28,8 +28,8 @@ class NmapParser:
 		:rtype: das.report.NmapParser
 		"""
 		self.services = services.split(',')
-		self.dns = dns
 
+		self.dns = dns
 		if dns:
 			self.db = TinyDB(db_path)
 			self.ip_domains_dict = {}
@@ -43,7 +43,7 @@ class NmapParser:
 		P = list(P)
 
 		xml_reports = {x for x in P if not x.stem.startswith('port')}
-		self.xml_reports = [str(r) for r in sorted(xml_reports, key=lambda x: socket.inet_aton(x.stem.replace('-', '.')))]
+		self.xml_reports = [str(r) for r in sorted(xml_reports, key=lambda x: socket.inet_aton(x.stem))]
 
 	def parse(self):
 		"""Print raw Nmap reports in simple text format."""
@@ -58,17 +58,28 @@ class NmapParser:
 					for port in nm[ip]['tcp']:
 						if nm[ip]['tcp'][port]['state'] == 'open':
 							service = nm[ip]['tcp'][port]['name']
-							if service in self.services:
+							if service in self.services or service == 'http' and 'https' in self.services:
+								if service == 'http' and 'script' in nm[ip]['tcp'][port] and 'ssl-cert' in nm[ip]['tcp'][port]['script']:
+									if 'https' in self.services:
+										service = 'https'
+									elif 'http' in self.services:
+										continue
+
+								if service == 'http' and port == 80 or service == 'https' and port == 443:
+									port = ''
+								else:
+									port = f':{port}'
+
 								if self.dns:
 									domains = self.ip_domains_dict[ip]
 									if domains:
 										for domain in domains:
 											if not self.raw_output:
-												Logger.print_success(f'IP {ip} -> {service}://{domain}:{port}')
+												Logger.print_success(f'IP {ip} -> {service}://{domain}{port}')
 											else:
-												print(f'{service}://{domain}:{port}')
+												print(f'{service}://{domain}{port}')
 										continue
 								if not self.raw_output:
-									Logger.print_success(f'{service}://{ip}:{port}')
+									Logger.print_success(f'{service}://{ip}{port}')
 								else:
-									print(f'{service}://{ip}:{port}')
+									print(f'{service}://{ip}{port}')
