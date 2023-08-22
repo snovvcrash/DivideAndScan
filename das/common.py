@@ -2,7 +2,7 @@
 
 __author__ = '@snovvcrash'
 __site__ = 'https://github.com/snovvcrash/DivideAndScan'
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 import time
 import shlex

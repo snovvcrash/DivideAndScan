@@ -52,13 +52,13 @@ class ScanBase:
 				P = (Path.home() / '.das' / f'nmap_{self.db_name}').glob('*.*')
 				hosts = [ip.stem for ip in P]
 				#result = self.db.search(~(self.Host.ip.one_of(hosts)))
-				result = [item[ip] for item in self.db.all() for ip in hosts if item[ip] not in hosts]
+				result = [item for item in self.db.all() if item['ip'] not in hosts]
 			else:
 				hosts = hosts.split(',')
 				hosts = [IPNetwork(h) for h in hosts]
 				hosts = [str(ip) for ip_obj in hosts for ip in ip_obj]
 				#result = self.db.search(self.Host.ip.one_of(hosts))
-				result = [item[ip] for item in self.db.all() for ip in hosts]
+				result = [item for item in self.db.all() if item['ip'] in hosts]
 
 			self.ip_ports_dict, self.ip_domains_dict = defaultdict(set), {}
 			for item in result:
@@ -80,7 +80,7 @@ class ScanBase:
 			else:
 				ports = [int(p) for p in ports.split(',')]
 				#result = self.db.search(self.Host.port.one_of(ports))
-				result = [item[port] for item in self.db.all() for port in ports]
+				result = [item for item in self.db.all() if item['port'] in ports]
 
 			self.port_ip_dict = defaultdict(set)
 			for item in result:
