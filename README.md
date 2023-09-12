@@ -53,14 +53,14 @@ To successfully *divide and scan* we need to get some good port scanning tools (
 
 📑 **Note:** if you don't feel like messing with dependecies on your host OS, skip to the [Docker](#using-from-docker) part.
 
-#### Nmap
+#### [Nmap](https://github.com/nmap/nmap)
 
 ```bash
 sudo apt install nmap xsltproc -y
 sudo nmap --script-updatedb
 ```
 
-#### Masscan
+#### [Masscan](https://github.com/ivre/masscan)
 
 ```bash
 pushd /tmp
@@ -72,7 +72,7 @@ sudo make install
 popd && rm -rf /tmp/masscan-master*
 ```
 
-#### RustScan
+#### [RustScan](about:blank)
 
 ```bash
 eget -t 2.0.1 -a amd64 RustScan/RustScan --to /tmp/rustscan.deb
@@ -80,7 +80,7 @@ sudo dpkg -i /tmp/rustscan.deb && rm /tmp/rustscan.deb
 sudo wget https://gist.github.com/snovvcrash/8b85b900bd928493cd1ae33b2df318d8/raw/fe8628396616c4bf7a3e25f2c9d1acc2f36af0c0/rustscan-ports-top1000.toml -O /root/.rustscan.toml
 ```
 
-#### Naabu
+#### [Naabu](about:blank)
 
 ```bash
 sudo mkdir /opt/naabu
@@ -88,7 +88,7 @@ sudo eget -s linux/amd64 projectdiscovery/naabu --to /opt/naabu
 sudo ln -sv /opt/naabu/naabu /usr/local/bin/naabu
 ```
 
-#### NimScan
+#### [NimScan](https://github.com/elddy/NimScan)
 
 ```bash
 sudo mkdir /opt/nimscan
@@ -96,7 +96,7 @@ sudo eget -a NimScan elddy/NimScan --to /opt/nimscan
 sudo ln -sv /opt/nimscan/nimscan /usr/local/bin/nimscan
 ```
 
-#### sx
+#### [sx](https://github.com/v-byte-cpu/sx)
 
 ```bash
 sudo mkdir /opt/sx
@@ -104,7 +104,7 @@ sudo eget -s linux/amd64 v-byte-cpu/sx --to /opt/sx
 sudo ln -sv /opt/sx/sx /usr/local/bin/sx
 ```
 
-#### dnsx
+#### [dnsx](https://github.com/projectdiscovery/dnsx)
 
 ```bash
 sudo mkdir /opt/pd
