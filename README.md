@@ -19,7 +19,7 @@
 ### Featured Projects
 
 <a href="https://github.com/NixOS/nixpkgs/blob/master/pkgs/tools/security/das/default.nix#gh-light-mode-only"><img src="https://raw.githubusercontent.com/NixOS/nixos-homepage/master/logo/nixos-hires.png" width="200px" alt="NixOS"/></a><a href="https://github.com/NixOS/nixpkgs/blob/master/pkgs/tools/security/das/default.nix#gh-dark-mode-only"><img src="https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nixos-white.png" width="200px" alt="NixOS"/></a> | <a href="https://offsec.tools/tool/divideandscan"><img src="https://github.com/gwen001/offsectools_www/raw/main/static/img/logo.png" width="150px" alt="offsec.tools"/></a>
---- | ---
+:-: | :-:
 [**NixOS**](https://nixos.org/) | [**offsec.tools**](https://offsec.tools/)
 
 </div>
