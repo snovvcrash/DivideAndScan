@@ -44,6 +44,7 @@ class DB:
 				dnsx_path = Path(tempfile.gettempdir()) / 'dnsx.txt'
 				domains_punycode = [domain.encode('idna').decode() + '\n' for domain in domains]
 				tmp.writelines(domains_punycode)
+				tmp.flush()
 				run_command(f'dnsx -l {tmp.name} -re -silent -o {dnsx_path}')
 
 			with open(dnsx_path) as f:
